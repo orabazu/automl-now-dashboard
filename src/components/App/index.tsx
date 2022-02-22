@@ -2,6 +2,8 @@ import './App.scss';
 
 import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
+import { Results } from 'components/Steps/Results';
+import { TimeSpan } from 'components/Steps/TimeSpan';
 import UploadData from 'components/Steps/UploadData';
 import WelcomeStep from 'components/Steps/WelcomeStep';
 import { Wizard } from 'components/Wizard';
@@ -19,11 +21,11 @@ function App() {
     },
     {
       title: 'Time Span',
-      content: 'Last-content',
+      content: <TimeSpan />,
     },
     {
       title: 'See Results',
-      content: 'Second-content',
+      content: <Results />,
     },
     {
       title: 'Full Report',
