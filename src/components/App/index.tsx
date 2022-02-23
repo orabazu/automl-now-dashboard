@@ -3,6 +3,7 @@ import './App.scss';
 import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
 import { Results } from 'components/Steps/Results';
+import { TargetSelection } from 'components/Steps/TargetSelection';
 import { TimeSpan } from 'components/Steps/TimeSpan';
 import UploadData from 'components/Steps/UploadData';
 import WelcomeStep from 'components/Steps/WelcomeStep';
@@ -29,7 +30,7 @@ function App() {
     },
     {
       title: 'Full Report',
-      content: 'Last-content',
+      content: <TargetSelection />,
     },
     {
       title: 'Download',
