@@ -1,0 +1,52 @@
+@import 'antd/dist/antd.css';
+@import 'styles/colors.scss';
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
+* {
+  font-family: 'Varela Round', sans-serif;
+}
+
+.button-color {
+  background-color: $primary-color;
+  color: white;
+}
+
+.ant-btn {
+  align-items: center;
+  border: 0px;
+  border-radius: 16px;
+  box-shadow: $primary-shadow;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  opacity: 1;
+  outline: 0px;
+  transition: background-color 0.2s ease 0s, opacity 0.2s ease 0s;
+  height: 32px;
+  padding: 0px 16px;
+}
+
+.ant-btn-primary {
+  @extend .button-color;
+
+  &:hover {
+    opacity: 0.65;
+    @extend .button-color;
+  }
+
+  &:active {
+    opacity: 0.85;
+    transform: translateY(1px);
+    box-shadow: none;
+    @extend .button-color;
+  }
+
+  &:focus {
+    @extend .button-color;
+  }
+}
