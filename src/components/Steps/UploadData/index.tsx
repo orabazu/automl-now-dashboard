@@ -16,7 +16,7 @@ const UploadData = () => {
       message.error(`${info.file.name} file upload failed.`);
     }
   };
-  const onDrop = (e) => {
+  const onDrop = (e: any) => {
     console.log('Dropped files', e.dataTransfer.files);
   };
 
