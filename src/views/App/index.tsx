@@ -1,5 +1,3 @@
-import './App.scss';
-
 import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
 import { Wizard } from 'components/Wizard';
