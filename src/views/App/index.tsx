@@ -2,13 +2,13 @@ import './App.scss';
 
 import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
-import { Results } from 'components/Steps/Results';
-import { TargetSelection } from 'components/Steps/TargetSelection';
-import { TimeSpan } from 'components/Steps/TimeSpan';
-import UploadData from 'components/Steps/UploadData';
-import WelcomeStep from 'components/Steps/WelcomeStep';
 import { Wizard } from 'components/Wizard';
 import React from 'react';
+import { Results } from 'views/Steps/Results';
+import { TargetSelection } from 'views/Steps/TargetSelection';
+import { TimeSpan } from 'views/Steps/TimeSpan';
+import UploadData from 'views/Steps/UploadData';
+import WelcomeStep from 'views/Steps/WelcomeStep';
 
 function App() {
   const steps = [

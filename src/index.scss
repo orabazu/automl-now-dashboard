@@ -50,3 +50,25 @@
     @extend .button-color;
   }
 }
+
+.ant-btn-default {
+  background: $light-gray;
+  &:hover {
+    opacity: 0.65;
+    background: $light-gray;
+    color: $black;
+  }
+
+  &:active {
+    opacity: 0.85;
+    transform: translateY(1px);
+    box-shadow: none;
+    background: $light-gray;
+    color: $black;
+  }
+
+  &:focus {
+    background: $light-gray;
+    color: $black;
+  }
+}

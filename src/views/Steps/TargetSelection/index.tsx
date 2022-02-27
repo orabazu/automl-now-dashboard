@@ -86,6 +86,7 @@ export const TargetSelection = () => {
 
   return (
     <Table
+      size="small"
       dataSource={rows}
       columns={columns}
       rowKey={(record) => record.field}
