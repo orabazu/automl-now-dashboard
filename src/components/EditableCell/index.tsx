@@ -11,6 +11,12 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
 }
 
+export enum DataType {
+  Numeric = '100',
+  Text = '200',
+  Categorical = '300',
+}
+
 export const EditableCell: React.FC<EditableCellProps> = ({
   handleChange,
   record,
@@ -24,7 +30,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     content =
       selectorType === 'role' ? (
         <Select
-          defaultValue={record?.type}
+          defaultValue={record?.role}
           style={{ width: 120 }}
           onChange={handleChange}>
           <Option value="id">Id</Option>
@@ -33,11 +39,12 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         </Select>
       ) : (
         <Select
-          defaultValue={record?.role}
+          defaultValue={record?.type.toString()}
           style={{ width: 120 }}
           onChange={handleChange}>
-          <Option value="text">Text</Option>
-          <Option value="numeric">Numeric</Option>
+          <Option value={DataType.Text}>Text</Option>
+          <Option value={DataType.Numeric}>Numeric</Option>
+          <Option value={DataType.Categorical}>Categorical</Option>
         </Select>
       );
   } else {

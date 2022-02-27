@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 import { Table } from 'antd';
-import { EditableCell } from 'components/EditableCell';
+import { DataType, EditableCell } from 'components/EditableCell';
 import React from 'react';
 
 export type TargetSelectionData = {
   field: string;
-  type: string;
+  type: DataType;
   role: string;
 };
 
@@ -54,32 +55,32 @@ export const TargetSelection = () => {
   const rows = [
     {
       field: 'restaurantId',
-      type: 'text',
+      type: DataType.Text,
       role: 'id',
     },
     {
       field: 'satisfactionfield',
-      type: 'text',
+      type: DataType.Text,
       role: 'id',
     },
     {
       field: 'receptionfield',
-      type: 'text',
+      type: DataType.Text,
       role: 'id',
     },
     {
       field: 'servicefield ',
-      type: 'text',
+      type: DataType.Numeric,
       role: 'id',
     },
     {
       field: 'waitingTimefield ',
-      type: 'text',
+      type: DataType.Text,
       role: 'id',
     },
     {
       field: 'foodQualityfield ',
-      type: 'text',
+      type: DataType.Categorical,
       role: 'id',
     },
   ];
