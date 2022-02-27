@@ -1,13 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { InputNumber, Select } from 'antd';
-import { Option } from 'antd/lib/mentions';
 import React from 'react';
 import { TargetSelectionData } from 'views/Steps/TargetSelection';
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  handleChange: (value: string) => void;
+  handleChange: (
+    value: DataType | RoleType,
+    columnType: DataColumnType,
+    field: string,
+  ) => void;
   record: TargetSelectionData;
-  selectorType: string;
+  columnType: DataColumnType;
   editable: boolean;
+  field: string;
   children: React.ReactNode;
 }
 
@@ -17,34 +21,46 @@ export enum DataType {
   Categorical = '300',
 }
 
+export enum RoleType {
+  Id = '1',
+  Target = '2',
+  Attribute = '3',
+}
+
+export enum DataColumnType {
+  Role = 'role',
+  Type = 'type',
+}
+
 export const EditableCell: React.FC<EditableCellProps> = ({
   handleChange,
   record,
-  selectorType,
+  columnType,
   editable,
+  field,
   children,
   ...restProps
 }) => {
   let content;
   if (editable) {
     content =
-      selectorType === 'role' ? (
+      columnType === 'role' ? (
         <Select
           defaultValue={record?.role}
           style={{ width: 120 }}
-          onChange={handleChange}>
-          <Option value="id">Id</Option>
-          <Option value="target">Target</Option>
-          <Option value="factor">Factor</Option>
+          onChange={(value) => handleChange(value, columnType, field)}>
+          <Select.Option value={RoleType.Id}>Id</Select.Option>
+          <Select.Option value={RoleType.Target}>Target</Select.Option>
+          <Select.Option value={RoleType.Attribute}>Attribute</Select.Option>
         </Select>
       ) : (
         <Select
-          defaultValue={record?.type.toString()}
+          defaultValue={record?.type}
           style={{ width: 120 }}
-          onChange={handleChange}>
-          <Option value={DataType.Text}>Text</Option>
-          <Option value={DataType.Numeric}>Numeric</Option>
-          <Option value={DataType.Categorical}>Categorical</Option>
+          onChange={(value) => handleChange(value, columnType, field)}>
+          <Select.Option value={DataType.Numeric}>Numeric</Select.Option>
+          <Select.Option value={DataType.Text}>Text</Select.Option>
+          <Select.Option value={DataType.Categorical}>Categorical</Select.Option>
         </Select>
       );
   } else {

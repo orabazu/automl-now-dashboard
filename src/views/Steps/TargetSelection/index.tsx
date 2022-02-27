@@ -1,15 +1,23 @@
 /* eslint-disable no-unused-vars */
 import { Table } from 'antd';
-import { DataType, EditableCell } from 'components/EditableCell';
-import React from 'react';
+import mockData from 'assets/mockData.json';
+import {
+  DataColumnType,
+  DataType,
+  EditableCell,
+  RoleType,
+} from 'components/EditableCell';
+import React, { useEffect, useMemo, useState } from 'react';
 
 export type TargetSelectionData = {
   field: string;
   type: DataType;
-  role: string;
+  role: RoleType;
 };
 
 export const TargetSelection = () => {
+  const [rows, setRows] = useState<TargetSelectionData[]>([]);
+
   const staticColumns = [
     {
       title: 'field',
@@ -19,13 +27,13 @@ export const TargetSelection = () => {
     },
     {
       title: 'type',
-      dataIndex: 'type',
+      dataIndex: DataColumnType.Type,
       key: 'type',
       editable: true,
     },
     {
       title: 'role',
-      dataIndex: 'role',
+      dataIndex: DataColumnType.Role,
       key: 'role',
       editable: true,
     },
@@ -40,51 +48,56 @@ export const TargetSelection = () => {
       onCell: (record: TargetSelectionData) => ({
         record,
         editable: col.editable,
-        dataIndex: col.dataIndex,
         title: col.title,
-        handleSave: handleSave,
-        selectorType: col.dataIndex,
+        handleChange: handleChange,
+        columnType: col.dataIndex,
+        field: record.field,
       }),
     };
   });
 
-  const handleSave = (e: any) => {
-    console.log(e);
+  const handleChange = (
+    value: DataType | RoleType,
+    dataColumnType: keyof TargetSelectionData,
+    field: string,
+  ) => {
+    const newRows = [...rows];
+    const index = newRows.findIndex((item) => field === item.field);
+    const newData = newRows[index];
+    //@ts-ignore
+    newData[dataColumnType] = value;
+    newRows.splice(index, 1, newData);
+    setRows(newRows);
   };
 
-  const rows = [
-    {
-      field: 'restaurantId',
-      type: DataType.Text,
-      role: 'id',
-    },
-    {
-      field: 'satisfactionfield',
-      type: DataType.Text,
-      role: 'id',
-    },
-    {
-      field: 'receptionfield',
-      type: DataType.Text,
-      role: 'id',
-    },
-    {
-      field: 'servicefield ',
-      type: DataType.Numeric,
-      role: 'id',
-    },
-    {
-      field: 'waitingTimefield ',
-      type: DataType.Text,
-      role: 'id',
-    },
-    {
-      field: 'foodQualityfield ',
-      type: DataType.Categorical,
-      role: 'id',
-    },
-  ];
+  useEffect(() => {
+    const rows = [];
+    const sampleData = mockData[0];
+    for (const [key, value] of Object.entries(sampleData)) {
+      if (typeof value === 'number') {
+        rows.push({
+          field: key,
+          type: DataType.Numeric,
+          role: RoleType.Attribute,
+        });
+      } else if (typeof value === 'string' && value.length < 6) {
+        rows.push({
+          field: key,
+          type: DataType.Categorical,
+          role: RoleType.Attribute,
+        });
+      } else {
+        rows.push({
+          field: key,
+          type: DataType.Text,
+          role: RoleType.Attribute,
+        });
+      }
+    }
+    setRows(rows);
+  }, []);
 
+  console.log(rows);
   return (
     <Table
       size="small"
