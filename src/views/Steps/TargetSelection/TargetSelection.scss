@@ -1,0 +1,15 @@
+@import '../../../styles/colors.scss';
+.TargetSelection {
+  .ant-table-row.IdBased {
+    background: $blue !important;
+    .ant-table-cell-row-hover {
+      background: $blue !important;
+    }
+  }
+  .ant-table-row.TargetBased {
+    background: $pink;
+    .ant-table-cell-row-hover {
+      background: $pink;
+    }
+  }
+}

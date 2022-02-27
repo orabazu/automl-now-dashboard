@@ -1,14 +1,26 @@
-import { Table } from 'antd';
-import { EditableCell } from 'components/EditableCell';
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import './TargetSelection.scss';
+
+import { Select, Space, Table } from 'antd';
+import Text from 'antd/lib/typography/Text';
+import mockData from 'assets/mockData.json';
+import {
+  DataColumnType,
+  DataType,
+  EditableCell,
+  RoleType,
+} from 'components/EditableCell';
+import React, { useEffect, useMemo, useState } from 'react';
 
 export type TargetSelectionData = {
   field: string;
-  type: string;
-  role: string;
+  type: DataType;
+  role: RoleType;
 };
 
 export const TargetSelection = () => {
+  const [rows, setRows] = useState<TargetSelectionData[]>([]);
+
   const staticColumns = [
     {
       title: 'field',
@@ -18,13 +30,13 @@ export const TargetSelection = () => {
     },
     {
       title: 'type',
-      dataIndex: 'type',
+      dataIndex: DataColumnType.Type,
       key: 'type',
       editable: true,
     },
     {
       title: 'role',
-      dataIndex: 'role',
+      dataIndex: DataColumnType.Role,
       key: 'role',
       editable: true,
     },
@@ -39,62 +51,108 @@ export const TargetSelection = () => {
       onCell: (record: TargetSelectionData) => ({
         record,
         editable: col.editable,
-        dataIndex: col.dataIndex,
         title: col.title,
-        handleSave: handleSave,
-        selectorType: col.dataIndex,
+        handleChange: handleChange,
+        columnType: col.dataIndex,
+        field: record.field,
+        isTargetSelected,
       }),
     };
   });
 
-  const handleSave = (e: any) => {
-    console.log(e);
+  const handleChange = (
+    value: DataType | RoleType,
+    dataColumnType: keyof TargetSelectionData,
+    field: string,
+  ) => {
+    const newRows = [...rows];
+    const index = newRows.findIndex((item) => field === item.field);
+    const newData = newRows[index];
+    //@ts-ignore
+    newData[dataColumnType] = value;
+    newRows.splice(index, 1, newData);
+    setRows(newRows);
   };
 
-  const rows = [
-    {
-      field: 'restaurantId',
-      type: 'text',
-      role: 'id',
-    },
-    {
-      field: 'satisfactionfield',
-      type: 'text',
-      role: 'id',
-    },
-    {
-      field: 'receptionfield',
-      type: 'text',
-      role: 'id',
-    },
-    {
-      field: 'servicefield ',
-      type: 'text',
-      role: 'id',
-    },
-    {
-      field: 'waitingTimefield ',
-      type: 'text',
-      role: 'id',
-    },
-    {
-      field: 'foodQualityfield ',
-      type: 'text',
-      role: 'id',
-    },
-  ];
+  useEffect(() => {
+    const rows = [];
+    const sampleData = mockData[0];
+    for (const [key, value] of Object.entries(sampleData)) {
+      if (typeof value === 'number') {
+        rows.push({
+          field: key,
+          type: DataType.Numeric,
+          role: RoleType.Attribute,
+        });
+      } else if (typeof value === 'string' && value.length < 6) {
+        rows.push({
+          field: key,
+          type: DataType.Categorical,
+          role: RoleType.Attribute,
+        });
+      } else {
+        rows.push({
+          field: key,
+          type: DataType.Text,
+          role: RoleType.Attribute,
+        });
+      }
+    }
+    setRows(rows);
+  }, []);
 
+  console.log(rows);
+  // is target categorical
+  const [isTargetSelected, categoricalTarget] = useMemo(() => {
+    let isTargetSelected = false;
+    let categoricalTarget;
+    rows.forEach((r) => {
+      if (r.role === RoleType.Target) {
+        isTargetSelected = true;
+        if (r.type === DataType.Categorical) {
+          categoricalTarget = r.field;
+        }
+      }
+    });
+    return [isTargetSelected, categoricalTarget];
+  }, [rows]);
+
+  const getRowClassName = (record: TargetSelectionData) => {
+    switch (record.role) {
+      case RoleType.Id:
+        return 'IdBased';
+      case RoleType.Target:
+        return 'TargetBased';
+      default:
+        return '';
+    }
+  };
   return (
-    <Table
-      size="small"
-      dataSource={rows}
-      columns={columns}
-      rowKey={(record) => record.field}
-      components={{
-        body: {
-          cell: EditableCell,
-        },
-      }}
-    />
+    <>
+      <Table
+        className="TargetSelection"
+        size="small"
+        dataSource={rows}
+        columns={columns}
+        rowKey={(record) => record.field}
+        rowClassName={getRowClassName}
+        components={{
+          body: {
+            cell: EditableCell,
+          },
+        }}
+      />
+      {categoricalTarget && (
+        <Space direction="vertical">
+          <Text>
+            Select the target value of interest for <Text code>{categoricalTarget}</Text>:
+          </Text>
+          <Select style={{ width: 120 }}>
+            <Select.Option value={1}>Excellent</Select.Option>
+            <Select.Option value={2}>Good</Select.Option>
+          </Select>
+        </Space>
+      )}
+    </>
   );
 };
