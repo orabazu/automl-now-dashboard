@@ -16,3 +16,10 @@
 .Regression {
   padding-bottom: 30px;
 }
+
+.download-footer {
+  padding: 30px 0;
+  & > button {
+    margin-right: 10px;
+  }
+}

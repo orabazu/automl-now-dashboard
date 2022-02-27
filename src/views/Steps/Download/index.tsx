@@ -51,14 +51,14 @@ export const Download = () => {
           <tbody>
             <tr>
               <td className="ant-table-cell head-cell">Negative (-)</td>
-              <td className="ant-table-cell">True (+) ___</td>
-              <td className="ant-table-cell">False (-) ___</td>
+              <td className="ant-table-cell positive">True (+) ___</td>
+              <td className="ant-table-cell negative">False (-) ___</td>
               <td className="ant-table-cell">Specifity ___</td>
             </tr>
             <tr>
               <td className="ant-table-cell head-cell">Positive(+)</td>
-              <td className="ant-table-cell">False (+) ___</td>
-              <td className="ant-table-cell">True (+) ___</td>
+              <td className="ant-table-cell negative">False (+) ___</td>
+              <td className="ant-table-cell positive">True (+) ___</td>
               <td className="ant-table-cell">Recall ___</td>
             </tr>
             <tr>
@@ -71,15 +71,12 @@ export const Download = () => {
         </table>
       </div>
 
-      <Space
-        style={{
-          padding: '30px 0px 30px',
-        }}>
+      <div className="download-footer">
         <Button type="primary" onClick={download}>
           Great, I want to purchase full report.
         </Button>
         <Button>I need better results. Please delete my data.</Button>
-      </Space>
+      </div>
     </>
   );
 };
