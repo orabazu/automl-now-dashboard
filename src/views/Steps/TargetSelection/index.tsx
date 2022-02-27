@@ -101,8 +101,6 @@ export const TargetSelection = () => {
     setRows(rows);
   }, []);
 
-  console.log(rows);
-  // is target categorical
   const [isTargetSelected, categoricalTarget] = useMemo(() => {
     let isTargetSelected = false;
     let categoricalTarget;

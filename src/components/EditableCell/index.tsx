@@ -44,7 +44,6 @@ export const EditableCell: React.FC<EditableCellProps> = ({
   ...restProps
 }) => {
   let content;
-  console.log('isTargetSelected', isTargetSelected);
   if (editable) {
     content =
       columnType === 'role' ? (
