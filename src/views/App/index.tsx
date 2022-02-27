@@ -2,6 +2,7 @@ import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
 import { Wizard } from 'components/Wizard';
 import React from 'react';
+import { Download } from 'views/Steps/Download';
 import { Results } from 'views/Steps/Results';
 import { TargetSelection } from 'views/Steps/TargetSelection';
 import { TimeSpan } from 'views/Steps/TimeSpan';
@@ -32,7 +33,7 @@ function App() {
     },
     {
       title: 'Download',
-      content: 'Last-content',
+      content: <Download />,
     },
   ];
 
