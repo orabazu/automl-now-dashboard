@@ -13,6 +13,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editable: boolean;
   field: string;
   children: React.ReactNode;
+  isTargetSelected: boolean;
 }
 
 export enum DataType {
@@ -39,9 +40,11 @@ export const EditableCell: React.FC<EditableCellProps> = ({
   editable,
   field,
   children,
+  isTargetSelected,
   ...restProps
 }) => {
   let content;
+  console.log('isTargetSelected', isTargetSelected);
   if (editable) {
     content =
       columnType === 'role' ? (
@@ -50,7 +53,9 @@ export const EditableCell: React.FC<EditableCellProps> = ({
           style={{ width: 120 }}
           onChange={(value) => handleChange(value, columnType, field)}>
           <Select.Option value={RoleType.Id}>Id</Select.Option>
-          <Select.Option value={RoleType.Target}>Target</Select.Option>
+          <Select.Option value={RoleType.Target} disabled={isTargetSelected}>
+            Target
+          </Select.Option>
           <Select.Option value={RoleType.Attribute}>Attribute</Select.Option>
         </Select>
       ) : (

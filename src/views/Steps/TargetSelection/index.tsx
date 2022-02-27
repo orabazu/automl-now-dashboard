@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { Table } from 'antd';
+import './TargetSelection.scss';
+
+import { Select, Space, Table } from 'antd';
+import Text from 'antd/lib/typography/Text';
 import mockData from 'assets/mockData.json';
 import {
   DataColumnType,
@@ -52,6 +55,7 @@ export const TargetSelection = () => {
         handleChange: handleChange,
         columnType: col.dataIndex,
         field: record.field,
+        isTargetSelected,
       }),
     };
   });
@@ -98,17 +102,57 @@ export const TargetSelection = () => {
   }, []);
 
   console.log(rows);
+  // is target categorical
+  const [isTargetSelected, categoricalTarget] = useMemo(() => {
+    let isTargetSelected = false;
+    let categoricalTarget;
+    rows.forEach((r) => {
+      if (r.role === RoleType.Target) {
+        isTargetSelected = true;
+        if (r.type === DataType.Categorical) {
+          categoricalTarget = r.field;
+        }
+      }
+    });
+    return [isTargetSelected, categoricalTarget];
+  }, [rows]);
+
+  const getRowClassName = (record: TargetSelectionData) => {
+    switch (record.role) {
+      case RoleType.Id:
+        return 'IdBased';
+      case RoleType.Target:
+        return 'TargetBased';
+      default:
+        return '';
+    }
+  };
   return (
-    <Table
-      size="small"
-      dataSource={rows}
-      columns={columns}
-      rowKey={(record) => record.field}
-      components={{
-        body: {
-          cell: EditableCell,
-        },
-      }}
-    />
+    <>
+      <Table
+        className="TargetSelection"
+        size="small"
+        dataSource={rows}
+        columns={columns}
+        rowKey={(record) => record.field}
+        rowClassName={getRowClassName}
+        components={{
+          body: {
+            cell: EditableCell,
+          },
+        }}
+      />
+      {categoricalTarget && (
+        <Space direction="vertical">
+          <Text>
+            Select the target value of interest for <Text code>{categoricalTarget}</Text>:
+          </Text>
+          <Select style={{ width: 120 }}>
+            <Select.Option value={1}>Excellent</Select.Option>
+            <Select.Option value={2}>Good</Select.Option>
+          </Select>
+        </Space>
+      )}
+    </>
   );
 };
