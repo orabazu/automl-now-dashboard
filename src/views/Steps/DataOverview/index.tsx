@@ -1,13 +1,19 @@
 import { Table, TablePaginationConfig } from 'antd';
 import Title from 'antd/lib/typography/Title';
-import mockData from 'assets/mockData.json';
+// import mockData from 'assets/mockData.json';
 import React, { useState } from 'react';
+import { HeadersType, RowType } from 'views/Main';
 
-export const DataOverview = () => {
+type DataOverviewProps = {
+  data: RowType;
+  headers: HeadersType;
+};
+
+export const DataOverview: React.FC<DataOverviewProps> = ({ data, headers }) => {
   const defaultPagination: TablePaginationConfig = {
     current: 1,
     pageSize: 5,
-    total: mockData.length,
+    total: data?.length,
   };
   const [pagination, setPagination] = useState(defaultPagination);
 
@@ -17,45 +23,12 @@ export const DataOverview = () => {
     setLoading(false);
   }, 1500);
 
-  const columns = [
-    {
-      title: 'restaurantId',
-      dataIndex: 'restaurantId',
-      key: 'restaurantId',
-    },
-    {
-      title: 'satisfaction',
-      dataIndex: 'satisfaction',
-      key: 'satisfaction',
-    },
-    {
-      title: 'reception',
-      dataIndex: 'reception',
-      key: 'reception',
-    },
-    {
-      title: 'service',
-      dataIndex: 'service',
-      key: 'service',
-    },
-    {
-      title: 'waitingTime',
-      dataIndex: 'waitingTime',
-      key: 'waitingTime',
-    },
-    {
-      title: 'foodQuality',
-      dataIndex: 'foodQuality',
-      key: 'foodQuality',
-    },
-  ];
-
   return (
     <>
       {!loading && <Title level={3}>Successfully read. Here is your data</Title>}
       <Table
-        dataSource={mockData}
-        columns={columns}
+        dataSource={data}
+        columns={headers}
         pagination={pagination}
         rowKey={(record) => record.restaurantId}
         onChange={(e: TablePaginationConfig) => setPagination(e)}

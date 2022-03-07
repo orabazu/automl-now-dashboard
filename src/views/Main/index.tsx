@@ -2,7 +2,7 @@ import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
 import { Wizard } from 'components/Wizard';
 import { connectWallet, useAccountContext } from 'contexts/accountContext';
-import React from 'react';
+import React, { useState } from 'react';
 import { formatAccount } from 'utils/common';
 import { DataOverview } from 'views/Steps/DataOverview';
 import { Download } from 'views/Steps/Download';
@@ -10,8 +10,45 @@ import { TargetSelection } from 'views/Steps/TargetSelection';
 import UploadData from 'views/Steps/UploadData';
 import WelcomeStep from 'views/Steps/WelcomeStep';
 
+export type RowType = { [k: string]: any }[];
+export type HeadersType =
+  | {
+      title: string;
+      dataIndex: string;
+      key: string;
+    }[]
+  | undefined;
+
 const Main = () => {
   const [accountState, accountDispatch] = useAccountContext();
+  const [data, setData] = useState<RowType>([]);
+  const [headers, setHeaders] = useState<HeadersType>([]);
+
+  const handleUpload = (parsedData: [][]) => {
+    const keys = parsedData[0];
+    const mappedData = parsedData.map((data) => {
+      let objectMap = {};
+      keys.forEach((element: string, i) => {
+        objectMap = {
+          ...objectMap,
+          [element]: data[i],
+        };
+      });
+      return objectMap;
+    });
+
+    const headers = mappedData.shift();
+    const headersFormatted =
+      headers &&
+      Object.keys(headers).map((header) => ({
+        title: header,
+        dataIndex: header,
+        key: header,
+      }));
+    setData(mappedData);
+    setHeaders(headersFormatted);
+  };
+
   const steps = [
     {
       title: 'Connect Wallet',
@@ -19,11 +56,11 @@ const Main = () => {
     },
     {
       title: 'Upload Data',
-      content: <UploadData />,
+      content: <UploadData onUpload={handleUpload} />,
     },
     {
       title: 'See Data',
-      content: <DataOverview />,
+      content: <DataOverview data={data} headers={headers} />,
     },
     {
       title: 'Select Data Type',
