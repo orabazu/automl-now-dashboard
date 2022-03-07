@@ -41,7 +41,7 @@ export const Wizard: React.FC<WizardProps> = ({ steps, isNextDisabled, tooltipTe
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Tooltip title={tooltipText}>
+          <Tooltip title={tooltipText} visible={isNextDisabled}>
             <Button
               type="primary"
               onClick={next}

@@ -118,7 +118,6 @@ const Main = () => {
           </Button>
         }></PageHeader>
       <div className="body">
-        {/* TODO: add is next disabled connection */}
         <Wizard
           steps={steps}
           isNextDisabled={accountState.isNextButtonDisabled}

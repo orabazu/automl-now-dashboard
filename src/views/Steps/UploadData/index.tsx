@@ -1,7 +1,9 @@
 import { InboxOutlined } from '@ant-design/icons';
-import { Upload } from 'antd';
+import { message, Upload } from 'antd';
 import { RcFile, UploadChangeParam } from 'antd/lib/upload';
-import React from 'react';
+import { useAccountContext } from 'contexts/accountContext';
+import React, { useEffect, useState } from 'react';
+import { AccountActionTypes } from 'reducers/accountReducer';
 import * as XLSX from 'xlsx';
 const { Dragger } = Upload;
 
@@ -11,6 +13,30 @@ type UploadDataProps = {
 };
 
 const UploadData: React.FC<UploadDataProps> = ({ onUpload }) => {
+  const [, accountDispatch] = useAccountContext();
+  const [parsedData, setParsedData] = useState(false);
+
+  useEffect(() => {
+    if (parsedData) {
+      accountDispatch({
+        type: AccountActionTypes.SET_IS_NEXT_BUTTON_DISABLED,
+        payload: false,
+      });
+    } else {
+      accountDispatch({
+        type: AccountActionTypes.SET_IS_NEXT_BUTTON_DISABLED,
+        payload: true,
+      });
+    }
+  }, [parsedData]);
+
+  useEffect(() => {
+    accountDispatch({
+      type: AccountActionTypes.SET_NEXT_BUTTON_TOOLTIP_TEXT,
+      payload: 'Please upload data first',
+    });
+  }, []);
+
   const parseData = (file: Blob) => {
     var reader = new FileReader();
     reader.onload = function (e) {
@@ -22,6 +48,7 @@ const UploadData: React.FC<UploadDataProps> = ({ onUpload }) => {
       /* Convert array to json*/
       const parsedData = XLSX.utils.sheet_to_json(ws, { header: 1 }) as [][];
       console.log(parsedData);
+      setParsedData(true);
       onUpload(parsedData);
     };
     reader.readAsBinaryString(file as Blob);
@@ -50,7 +77,14 @@ const UploadData: React.FC<UploadDataProps> = ({ onUpload }) => {
   };
 
   const handleBeforeUpload = (file: RcFile) => {
-    parseData(file);
+    const isExcel =
+      file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    if (!isExcel) {
+      message.error(`${file.name} is not an excel file. Please upload an excel file`);
+      return isExcel || Upload.LIST_IGNORE;
+    } else {
+      parseData(file);
+    }
   };
 
   return (
