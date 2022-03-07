@@ -24,10 +24,14 @@
     background: $white;
     border: 2px solid $light-gray;
 
-    & > button {
+    & button {
       font-size: 16px;
       height: 48px;
       min-width: 120px;
+    }
+
+    & button:disabled {
+      background: $shadow-blue;
     }
   }
   .steps-next-button {

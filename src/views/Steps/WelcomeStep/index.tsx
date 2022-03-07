@@ -1,8 +1,10 @@
 import { Button, Space, Timeline } from 'antd';
 import Title from 'antd/lib/typography/Title';
+import { connectWallet, useAccountContext } from 'contexts/accountContext';
 import React from 'react';
 
 const WelcomeStep = () => {
+  const [accountState, accountDispatch] = useAccountContext();
   return (
     <>
       <Title level={3}>Instructions</Title>
@@ -21,7 +23,16 @@ const WelcomeStep = () => {
         </Timeline.Item>
       </Timeline>
       <Space align="center">
-        <Button type="primary">Cool, let&rsquo;s connect my wallet </Button>
+        <Button
+          type="primary"
+          loading={accountState.isLoading}
+          onClick={() =>
+            accountState.account?.address ? undefined : connectWallet(accountDispatch)
+          }>
+          {accountState.account?.address
+            ? `Your wallet is already connected`
+            : `Cool, let's connect my wallet`}
+        </Button>
       </Space>
     </>
   );
