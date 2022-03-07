@@ -3,10 +3,11 @@ import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
 import { Wizard } from 'components/Wizard';
 import React, { useState } from 'react';
+import { formatAccount } from 'utils/common';
+import { postData } from 'utils/http';
+import { DataOverview } from 'views/Steps/DataOverview';
 import { Download } from 'views/Steps/Download';
-import { Results } from 'views/Steps/Results';
 import { TargetSelection } from 'views/Steps/TargetSelection';
-import { TimeSpan } from 'views/Steps/TimeSpan';
 import UploadData from 'views/Steps/UploadData';
 import WelcomeStep from 'views/Steps/WelcomeStep';
 
@@ -22,16 +23,16 @@ function App() {
       content: <UploadData />,
     },
     {
-      title: 'Time Span',
-      content: <TimeSpan />,
+      title: 'See Data',
+      content: <DataOverview />,
     },
     {
-      title: 'See Results',
-      content: <Results />,
-    },
-    {
-      title: 'Full Report',
+      title: 'Select Data Type',
       content: <TargetSelection />,
+    },
+    {
+      title: 'Results',
+      content: <Download />,
     },
     {
       title: 'Download',
@@ -39,25 +40,11 @@ function App() {
     },
   ];
 
-  // Example POST method implementation:
-  async function postData(url = '', altName: string, data = {}) {
-    console.log('altName', altName);
-    // Default options are marked with *
-    const response = await fetch(url, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
-    });
-    return response.json(); // parses JSON response into native JavaScript objects
-  }
-
   const connectWallet = async () => {
     let data = await postData('https://faucet-nft.ripple.com/accounts', 'NFT-Devnet');
 
     // not expose secret on UI
+    // these are credentials
     const { address, secret } = data.account;
     console.log(data, secret);
     // let networkUrl = 'wss://s.altnet.rippletest.net:51233';
@@ -68,28 +55,29 @@ function App() {
     const client = new xrpl.Client(nftNetworkUrl);
     await client.connect();
     let response;
-    try {
-      response = await client.request({
-        command: 'account_info',
-        account: address,
-        ledger_index: 'validated',
-      });
-      console.log(
-        "\n\n----------------Get XRPL NFT Seller's Wallet Account Info----------------",
-      );
-      console.log(JSON.stringify(response, null, 2));
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      try {
+        response = await client.request({
+          command: 'account_info',
+          account: address,
+          ledger_index: 'validated',
+        });
+        console.log(
+          "\n\n----------------Get XRPL NFT Seller's Wallet Account Info----------------",
+        );
+        console.log(JSON.stringify(response, null, 2));
 
-      setAccount(response.result.account_data.Account);
-    } catch (e) {
-      console.error(e);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+        setAccount(response.result.account_data.Account);
+        break;
+      } catch (e) {
+        console.error(e);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
     }
 
     client.disconnect();
   };
-
-  const formatAccount = (str?: string) =>
-    str && str.substr(0, 5) + '...' + str.substr(str.length - 5, str.length);
 
   return (
     <div className="App">
@@ -106,7 +94,8 @@ function App() {
           </Button>,
         ]}></PageHeader>
       <div className="body">
-        <Wizard steps={steps} />
+        {/* TODO: add is next disabled connection */}
+        <Wizard steps={steps} isNextDisabled={false} />
       </div>
     </div>
   );

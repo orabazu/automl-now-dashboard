@@ -3,7 +3,7 @@ import Title from 'antd/lib/typography/Title';
 import mockData from 'assets/mockData.json';
 import React, { useState } from 'react';
 
-export const Results = () => {
+export const DataOverview = () => {
   const defaultPagination: TablePaginationConfig = {
     current: 1,
     pageSize: 5,

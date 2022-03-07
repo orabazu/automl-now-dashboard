@@ -8,9 +8,10 @@ const { Step } = Steps;
 type StepType = { title: string; content: string | ReactNode };
 type WizardProps = {
   steps: StepType[];
+  isNextDisabled?: boolean;
 };
 
-export const Wizard: React.FC<WizardProps> = ({ steps }) => {
+export const Wizard: React.FC<WizardProps> = ({ steps, isNextDisabled }) => {
   const [current, setCurrent] = useState(0);
 
   const next = () => {
@@ -39,7 +40,11 @@ export const Wizard: React.FC<WizardProps> = ({ steps }) => {
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Button type="primary" onClick={next} className={'steps-next-button'}>
+          <Button
+            type="primary"
+            onClick={next}
+            className={'steps-next-button'}
+            disabled={isNextDisabled}>
             Next
           </Button>
         )}
