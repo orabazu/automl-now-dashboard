@@ -35,6 +35,9 @@
     "vite": "^2.4.1",
     "vite-tsconfig-paths": "^3.3.17"
   },
+  "externals": {
+    "xrpl": "xrpl"
+  },
   "pre-commit": "lint",
   "license": "MIT"
 }
