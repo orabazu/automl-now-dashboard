@@ -2,7 +2,8 @@ import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
 import { Wizard } from 'components/Wizard';
 import { connectWallet, useAccountContext } from 'contexts/accountContext';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { AccountActionTypes } from 'reducers/accountReducer';
 import { formatAccount } from 'utils/common';
 import { DataOverview } from 'views/Steps/DataOverview';
 import { Download } from 'views/Steps/Download';
@@ -75,6 +76,28 @@ const Main = () => {
       content: <Download />,
     },
   ];
+
+  useEffect(() => {
+    if (accountState.account?.address) {
+      accountDispatch({
+        type: AccountActionTypes.SET_IS_NEXT_BUTTON_DISABLED,
+        payload: false,
+      });
+    } else {
+      accountDispatch({
+        type: AccountActionTypes.SET_IS_NEXT_BUTTON_DISABLED,
+        payload: true,
+      });
+    }
+  }, [accountState.account?.address]);
+
+  useEffect(() => {
+    accountDispatch({
+      type: AccountActionTypes.SET_NEXT_BUTTON_TOOLTIP_TEXT,
+      payload: 'Please connect wallet first',
+    });
+  }, []);
+
   return (
     <>
       <PageHeader
@@ -96,7 +119,11 @@ const Main = () => {
         }></PageHeader>
       <div className="body">
         {/* TODO: add is next disabled connection */}
-        <Wizard steps={steps} isNextDisabled={false} />
+        <Wizard
+          steps={steps}
+          isNextDisabled={accountState.isNextButtonDisabled}
+          tooltipText={accountState.nextButtonTooltipText}
+        />
       </div>
     </>
   );

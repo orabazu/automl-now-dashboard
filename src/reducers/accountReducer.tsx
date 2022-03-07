@@ -5,17 +5,23 @@ export type AccountState = {
     address: string;
     balance: string;
   } | null;
+  isNextButtonDisabled: boolean;
+  nextButtonTooltipText: string;
 };
 
 const initialState: AccountState = {
   account: null,
   isLoading: false,
+  isNextButtonDisabled: false,
+  nextButtonTooltipText: 'Please connect wallet first',
 };
 
 export enum AccountActionTypes {
   SET_ACCOUNT = 'SET_ACCOUNT',
   SET_IS_ACCOUNT_LOADING = 'SET_IS_ACCOUNT_LOADING',
   SET_ACCOUNT_FAILURE = 'SET_ACCOUNT_FAILURE',
+  SET_IS_NEXT_BUTTON_DISABLED = 'SET_IS_NEXT_BUTTON_DISABLED',
+  SET_NEXT_BUTTON_TOOLTIP_TEXT = 'SET_NEXT_BUTTON_TOOLTIP_TEXT',
 }
 
 export type AccountAction =
@@ -24,7 +30,9 @@ export type AccountAction =
       payload: { address: string; balance: string } | null;
     }
   | { type: AccountActionTypes.SET_IS_ACCOUNT_LOADING; payload: boolean }
-  | { type: AccountActionTypes.SET_ACCOUNT_FAILURE };
+  | { type: AccountActionTypes.SET_ACCOUNT_FAILURE }
+  | { type: AccountActionTypes.SET_IS_NEXT_BUTTON_DISABLED; payload: boolean }
+  | { type: AccountActionTypes.SET_NEXT_BUTTON_TOOLTIP_TEXT; payload: string };
 
 const reducer = (state: AccountState, action: AccountAction): AccountState => {
   switch (action.type) {
@@ -42,6 +50,16 @@ const reducer = (state: AccountState, action: AccountAction): AccountState => {
       return {
         ...state,
         isLoading: action.payload,
+      };
+    case AccountActionTypes.SET_IS_NEXT_BUTTON_DISABLED:
+      return {
+        ...state,
+        isNextButtonDisabled: action.payload,
+      };
+    case AccountActionTypes.SET_NEXT_BUTTON_TOOLTIP_TEXT:
+      return {
+        ...state,
+        nextButtonTooltipText: action.payload,
       };
     default:
       return state;

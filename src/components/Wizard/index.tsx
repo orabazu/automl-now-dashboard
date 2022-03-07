@@ -1,6 +1,6 @@
 import './Wizard.scss';
 
-import { Button, message, Steps } from 'antd';
+import { Button, message, Steps, Tooltip } from 'antd';
 import React, { ReactNode, useState } from 'react';
 
 const { Step } = Steps;
@@ -9,9 +9,10 @@ type StepType = { title: string; content: string | ReactNode };
 type WizardProps = {
   steps: StepType[];
   isNextDisabled?: boolean;
+  tooltipText: string;
 };
 
-export const Wizard: React.FC<WizardProps> = ({ steps, isNextDisabled }) => {
+export const Wizard: React.FC<WizardProps> = ({ steps, isNextDisabled, tooltipText }) => {
   const [current, setCurrent] = useState(0);
 
   const next = () => {
@@ -40,13 +41,15 @@ export const Wizard: React.FC<WizardProps> = ({ steps, isNextDisabled }) => {
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={next}
-            className={'steps-next-button'}
-            disabled={isNextDisabled}>
-            Next
-          </Button>
+          <Tooltip title={tooltipText}>
+            <Button
+              type="primary"
+              onClick={next}
+              className={'steps-next-button'}
+              disabled={isNextDisabled}>
+              Next
+            </Button>
+          </Tooltip>
         )}
       </div>
     </div>
