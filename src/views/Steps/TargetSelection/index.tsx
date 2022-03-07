@@ -3,7 +3,7 @@ import './TargetSelection.scss';
 
 import { Select, Space, Table } from 'antd';
 import Text from 'antd/lib/typography/Text';
-import mockData from 'assets/mockData.json';
+// import mockData from 'assets/mockData.json';
 import {
   DataColumnType,
   DataType,
@@ -11,6 +11,11 @@ import {
   RoleType,
 } from 'components/EditableCell';
 import React, { useEffect, useMemo, useState } from 'react';
+import { HeadersType, RowType } from 'views/Main';
+
+type TargetSelectionProps = {
+  data: RowType;
+};
 
 export type TargetSelectionData = {
   field: string;
@@ -18,7 +23,7 @@ export type TargetSelectionData = {
   role: RoleType;
 };
 
-export const TargetSelection = () => {
+export const TargetSelection: React.FC<TargetSelectionProps> = ({ data }) => {
   const [rows, setRows] = useState<TargetSelectionData[]>([]);
 
   const staticColumns = [
@@ -76,7 +81,7 @@ export const TargetSelection = () => {
 
   useEffect(() => {
     const rows = [];
-    const sampleData = mockData[0];
+    const sampleData = data[0];
     for (const [key, value] of Object.entries(sampleData)) {
       if (typeof value === 'number') {
         rows.push({

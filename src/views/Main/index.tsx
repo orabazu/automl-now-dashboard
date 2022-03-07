@@ -64,7 +64,7 @@ const Main = () => {
     },
     {
       title: 'Select Data Type',
-      content: <TargetSelection />,
+      content: <TargetSelection data={data} />,
     },
     {
       title: 'Results',
