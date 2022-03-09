@@ -4,6 +4,8 @@ export type AccountState = {
   account: {
     address: string;
     balance: string;
+    classicAddress: string;
+    secret: string;
   } | null;
   isNextButtonDisabled: boolean;
   nextButtonTooltipText: string;
@@ -27,7 +29,12 @@ export enum AccountActionTypes {
 export type AccountAction =
   | {
       type: AccountActionTypes.SET_ACCOUNT;
-      payload: { address: string; balance: string } | null;
+      payload: {
+        address: string;
+        balance: string;
+        classicAddress: string;
+        secret: string;
+      } | null;
     }
   | { type: AccountActionTypes.SET_IS_ACCOUNT_LOADING; payload: boolean }
   | { type: AccountActionTypes.SET_ACCOUNT_FAILURE }

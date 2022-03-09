@@ -151,8 +151,9 @@ export const TargetSelection: React.FC<TargetSelectionProps> = ({ data }) => {
             Select the target value of interest for <Text code>{categoricalTarget}</Text>:
           </Text>
           <Select style={{ width: 120 }}>
-            <Select.Option value={1}>Excellent</Select.Option>
-            <Select.Option value={2}>Good</Select.Option>
+            <Select.Option value={1}>Iris-setosa</Select.Option>
+            <Select.Option value={2}>Iris-versicolor</Select.Option>
+            <Select.Option value={2}>Iris-virginica</Select.Option>
           </Select>
         </Space>
       )}

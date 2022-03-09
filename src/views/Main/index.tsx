@@ -11,6 +11,8 @@ import { TargetSelection } from 'views/Steps/TargetSelection';
 import UploadData from 'views/Steps/UploadData';
 import WelcomeStep from 'views/Steps/WelcomeStep';
 
+// import xrpLogo from '../../assets/xrp.png';
+
 export type RowType = { [k: string]: any }[];
 export type HeadersType =
   | {
@@ -19,6 +21,8 @@ export type HeadersType =
       key: string;
     }[]
   | undefined;
+
+import './Main.scss';
 
 const Main = () => {
   const [accountState, accountDispatch] = useAccountContext();
@@ -99,23 +103,33 @@ const Main = () => {
   }, []);
 
   return (
-    <>
+    <div className="Main">
       <PageHeader
+        className="PageHeader"
         ghost={false}
         avatar={{
           src: Logo,
         }}
-        title="AutoMLNow"
+        title="AutoML.NFT"
         subTitle="Automate your ML, get your results as NFT"
         extra={
-          <Button
-            loading={accountState.isLoading}
-            type="primary"
-            onClick={() =>
-              accountState.account?.address ? undefined : connectWallet(accountDispatch)
-            }>
-            {formatAccount(accountState.account?.address) || 'Connect Wallet'}
-          </Button>
+          <>
+            {accountState.account?.balance && (
+              <Button>{accountState.account?.balance} XRP</Button>
+            )}
+
+            <Button
+              loading={accountState.isLoading}
+              type="primary"
+              onClick={() =>
+                accountState.account?.address ? undefined : connectWallet(accountDispatch)
+              }>
+              {accountState.account?.address
+                ? formatAccount(accountState.account?.address)
+                : 'Connect Wallet'}
+            </Button>
+            {/* <Avatar src={xrpLogo} className={'xrpLogo'} /> */}
+          </>
         }></PageHeader>
       <div className="body">
         <Wizard
@@ -124,7 +138,7 @@ const Main = () => {
           tooltipText={accountState.nextButtonTooltipText}
         />
       </div>
-    </>
+    </div>
   );
 };
 

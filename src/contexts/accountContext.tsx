@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { createContext, useContext, useReducer } from 'react';
 import { postData } from 'utils/http';
 
@@ -31,15 +32,14 @@ async function connectWallet(dispatch: React.Dispatch<AccountAction>) {
   try {
     let data = await postData('https://faucet-nft.ripple.com/accounts', 'NFT-Devnet');
 
+    // possibly const test_wallet = xrpl.Wallet.generate()
     // not expose secret on UI
     // these are credentials
-    const { address, secret } = data.account;
+    const { balance, account } = data;
+    const { address, secret, classicAddress } = account;
     console.log(data, secret);
     // let networkUrl = 'wss://s.altnet.rippletest.net:51233';
     let nftNetworkUrl = 'wss://xls20-sandbox.rippletest.net:51233';
-    // eslint-disable-next-line no-undef
-    console.log(xrpl);
-    // eslint-disable-next-line no-undef
     const client = new xrpl.Client(nftNetworkUrl);
     await client.connect();
     let response;
@@ -58,7 +58,9 @@ async function connectWallet(dispatch: React.Dispatch<AccountAction>) {
 
         const payload = {
           address: response.result.account_data.Account,
-          balance: response.result.account_data.Balance,
+          balance: balance,
+          classicAddress: classicAddress,
+          secret,
         };
 
         dispatch({ type: AccountActionTypes.SET_ACCOUNT, payload });
