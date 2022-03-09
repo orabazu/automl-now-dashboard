@@ -1,9 +1,9 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import './style.scss';
 
-import { FilePdfOutlined } from '@ant-design/icons';
 import {
   Avatar,
   Button,
@@ -15,6 +15,7 @@ import {
   Space,
 } from 'antd';
 import Title from 'antd/lib/typography/Title';
+import Logo from 'assets/logo.png';
 import { getAccountInfo, useAccountContext } from 'contexts/accountContext';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -138,21 +139,30 @@ const Dashboard = () => {
     <>
       <Result
         className="Hero"
-        icon={<FilePdfOutlined />}
-        title="Machine Learning reporst with just a few clicks, seamless integration with NFTs on XRP Ledger "
+        icon={false}
+        title={
+          <>
+            <img src={Logo} style={{ maxWidth: '150px' }}></img>
+            <h3>
+              Machine Learning reports with just a few clicks, seamless integration with
+              NFTs on XRP Ledger
+            </h3>
+          </>
+        }
         // subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
         extra={[
           <Link to="generate-report" key="generate-report">
             <Button type="primary">Generate Report</Button>
           </Link>,
-          <Button key="buy">MarketPlace</Button>,
+          <Link to="marketplace" key="marketplace">
+            <Button key="buy">MarketPlace</Button>
+          </Link>,
         ]}
       />
       <Space
         direction="vertical"
         style={{
           padding: '20px 50px',
-          background: 'linear-gradient(179deg, #f0f0f1, #e6f7ff)',
           width: '100%',
         }}>
         <Title level={2}>Your NFTs</Title>
@@ -187,6 +197,8 @@ const Dashboard = () => {
                   />
                 </Skeleton>
 
+                <p className="actions">Owner: {accountState.account?.address}</p>
+
                 <div className="actions">
                   <Button onClick={() => getOffers(item.TokenID)}>Get Offers</Button>
                 </div>
@@ -198,10 +210,10 @@ const Dashboard = () => {
                       <>
                         <Descriptions.Item label="Offered By" key={offer.index}>
                           {offer.owner === accountState.account?.address
-                            ? 'Me'
+                            ? accountState.account?.address + '(Me)'
                             : offer.owner}
                         </Descriptions.Item>
-                        <Descriptions.Item label="Price" key={offer.index}>
+                        <Descriptions.Item label="Price" key={'offer'}>
                           {offer.amount} XRP
                         </Descriptions.Item>
                       </>

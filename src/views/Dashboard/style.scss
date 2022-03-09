@@ -9,3 +9,9 @@ li.ant-list-item {
   display: flex;
   margin-left: 46px;
 }
+
+.Hero {
+  > .ant-result-icon {
+    display: none;
+  }
+}

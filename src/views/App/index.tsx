@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Dashboard from 'views/Dashboard';
 import Header from 'views/Header';
+import { MarketPlace } from 'views/Marketplace';
 import ReportGenerator from 'views/ReportGenerator';
 
 import { AccountContextProvider } from '../../contexts/accountContext';
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Header />}>
               <Route index element={<Dashboard />} />
               <Route path="generate-report" element={<ReportGenerator />} />
+              <Route path="marketplace" element={<MarketPlace />} />
             </Route>
             <Route
               path="*"

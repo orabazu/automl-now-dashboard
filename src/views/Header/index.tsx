@@ -2,7 +2,7 @@ import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
 import { connectWallet, useAccountContext } from 'contexts/accountContext';
 import React, { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { AccountActionTypes } from 'reducers/accountReducer';
 import { formatAccount } from 'utils/common';
 
@@ -51,7 +51,7 @@ const Header = () => {
         avatar={{
           src: Logo,
         }}
-        title="AutoML.NFT"
+        title={<Link to="/">AutoML.NFT </Link>}
         subTitle="Automate your ML, get your results as NFT"
         extra={
           <>

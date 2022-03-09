@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React, { createContext, useContext, useReducer } from 'react';
+import { postData } from 'utils/http';
 
-// import { postData } from 'utils/http';
 import {
   AccountAction,
   AccountActionTypes,
@@ -30,17 +30,17 @@ const AccountContextProvider = (props: Props): JSX.Element => {
 async function connectWallet(dispatch: React.Dispatch<AccountAction>) {
   dispatch({ type: AccountActionTypes.SET_IS_ACCOUNT_LOADING, payload: true });
   try {
-    // let wallet = await postData('https://faucet-nft.ripple.com/accounts', 'NFT-Devnet');
+    let wallet = await postData('https://faucet-nft.ripple.com/accounts', 'NFT-Devnet');
 
     // possibly const test_wallet = xrpl.Wallet.generate()
     // not expose secret on UI
     // these are credentials
 
     // TODO ask if secret exist or not
-    const wallet = xrpl.Wallet.fromSeed('shyTfxCW4gHNUbvYbv77LZdtQErRk');
+    // const wallet = xrpl.Wallet.fromSeed('shyTfxCW4gHNUbvYbv77LZdtQErRk');
 
-    const { address, seed, classicAddress } = wallet;
-    console.log(wallet, seed);
+    const { address, seed, classicAddress, secret } = wallet.account;
+    console.log(wallet, seed, secret);
 
     let nftNetworkUrl = 'wss://xls20-sandbox.rippletest.net:51233';
     const client = new xrpl.Client(nftNetworkUrl);
@@ -63,7 +63,7 @@ async function connectWallet(dispatch: React.Dispatch<AccountAction>) {
           address: response.result.account_data.Account,
           balance: response.result.account_data.Balance,
           classicAddress: classicAddress,
-          secret: seed,
+          secret: seed || secret,
         };
 
         dispatch({ type: AccountActionTypes.SET_ACCOUNT, payload });
