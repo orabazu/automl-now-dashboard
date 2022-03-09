@@ -1,16 +1,10 @@
 import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
-import { Wizard } from 'components/Wizard';
 import { connectWallet, useAccountContext } from 'contexts/accountContext';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import { AccountActionTypes } from 'reducers/accountReducer';
 import { formatAccount } from 'utils/common';
-import { DataOverview } from 'views/Steps/DataOverview';
-import { Download } from 'views/Steps/Download';
-import { Results } from 'views/Steps/Results';
-import { TargetSelection } from 'views/Steps/TargetSelection';
-import UploadData from 'views/Steps/UploadData';
-import WelcomeStep from 'views/Steps/WelcomeStep';
 
 // import xrpLogo from '../../assets/xrp.png';
 
@@ -23,64 +17,10 @@ export type HeadersType =
     }[]
   | undefined;
 
-import './Main.scss';
+import './Header.scss';
 
-const Main = () => {
+const Header = () => {
   const [accountState, accountDispatch] = useAccountContext();
-  const [data, setData] = useState<RowType>([]);
-  const [headers, setHeaders] = useState<HeadersType>([]);
-
-  const handleUpload = (parsedData: [][]) => {
-    const keys = parsedData[0];
-    const mappedData = parsedData.map((data) => {
-      let objectMap = {};
-      keys.forEach((element: string, i) => {
-        objectMap = {
-          ...objectMap,
-          [element]: data[i],
-        };
-      });
-      return objectMap;
-    });
-
-    const headers = mappedData.shift();
-    const headersFormatted =
-      headers &&
-      Object.keys(headers).map((header) => ({
-        title: header,
-        dataIndex: header,
-        key: header,
-      }));
-    setData(mappedData);
-    setHeaders(headersFormatted);
-  };
-
-  const steps = [
-    {
-      title: 'Connect Wallet',
-      content: <WelcomeStep />,
-    },
-    {
-      title: 'Upload Data',
-      content: <UploadData onUpload={handleUpload} />,
-    },
-    {
-      title: 'See Data',
-      content: <DataOverview data={data} headers={headers} />,
-    },
-    {
-      title: 'Select Data Type',
-      content: <TargetSelection data={data} />,
-    },
-    {
-      title: 'Results',
-      content: <Results />,
-    },
-    {
-      title: 'Download',
-      content: <Download />,
-    },
-  ];
 
   useEffect(() => {
     if (accountState.account?.address) {
@@ -132,15 +72,9 @@ const Main = () => {
             {/* <Avatar src={xrpLogo} className={'xrpLogo'} /> */}
           </>
         }></PageHeader>
-      <div className="body">
-        <Wizard
-          steps={steps}
-          isNextDisabled={accountState.isNextButtonDisabled}
-          tooltipText={accountState.nextButtonTooltipText}
-        />
-      </div>
+      <Outlet />
     </div>
   );
 };
 
-export default Main;
+export default Header;

@@ -11,7 +11,7 @@ import {
   RoleType,
 } from 'components/EditableCell';
 import React, { useEffect, useMemo, useState } from 'react';
-import { HeadersType, RowType } from 'views/Main';
+import { HeadersType, RowType } from 'views/ReportGenerator';
 
 type TargetSelectionProps = {
   data: RowType;

@@ -59,5 +59,6 @@ module.exports = {
     expect: true,
     jsdom: true,
     JSX: true,
+    xrpl: true,
   },
 };

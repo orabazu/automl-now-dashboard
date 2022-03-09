@@ -30,14 +30,14 @@ const AccountContextProvider = (props: Props): JSX.Element => {
 async function connectWallet(dispatch: React.Dispatch<AccountAction>) {
   dispatch({ type: AccountActionTypes.SET_IS_ACCOUNT_LOADING, payload: true });
   try {
-    // let data = await postData('https://faucet-nft.ripple.com/accounts', 'NFT-Devnet');
+    // let wallet = await postData('https://faucet-nft.ripple.com/accounts', 'NFT-Devnet');
 
     // possibly const test_wallet = xrpl.Wallet.generate()
     // not expose secret on UI
     // these are credentials
 
     // TODO ask if secret exist or not
-    const wallet = xrpl.Wallet.fromSeed('ssUYV8QwvDaHxTdNh1JKJwjSKt9oE');
+    const wallet = xrpl.Wallet.fromSeed('shyTfxCW4gHNUbvYbv77LZdtQErRk');
 
     const { address, seed, classicAddress } = wallet;
     console.log(wallet, seed);
@@ -83,6 +83,33 @@ async function connectWallet(dispatch: React.Dispatch<AccountAction>) {
   }
 }
 
+async function getAccountInfo(
+  dispatch: React.Dispatch<AccountAction>,
+  state: AccountState,
+) {
+  const wallet = xrpl.Wallet.fromSeed(state.account?.secret);
+  const client = new xrpl.Client('wss://xls20-sandbox.rippletest.net:51233');
+  await client.connect();
+  console.log('\n\n----------------Get Account Info----------------');
+  // const nfts = await client.request({
+  const response = await client.request({
+    command: 'account_info',
+    account: wallet.address,
+    ledger_index: 'validated',
+  });
+
+  const payload = {
+    address: response.result.account_data.Account,
+    balance: response.result.account_data.Balance,
+    classicAddress: wallet.classicAddress,
+    secret: wallet.seed,
+  };
+
+  dispatch({ type: AccountActionTypes.SET_ACCOUNT, payload });
+  dispatch({ type: AccountActionTypes.SET_IS_ACCOUNT_LOADING, payload: false });
+  client.disconnect();
+} //End of getAccountInfo
+
 const useAccountContext = () => useContext(AccountContext);
 
-export { AccountContextProvider, connectWallet, useAccountContext };
+export { AccountContextProvider, connectWallet, getAccountInfo, useAccountContext };
