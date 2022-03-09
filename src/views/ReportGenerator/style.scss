@@ -1,0 +1,15 @@
+@import '../../styles/colors.scss';
+
+.Main {
+  .PageHeader {
+    border-bottom: 1px solid $light-gray;
+  }
+
+  .ant-avatar.ant-avatar-circle.ant-avatar-image.xrpLogo {
+    border: 1px solid $light-gray;
+    margin: 0;
+    margin: 0 5px;
+    z-index: 2;
+    box-shadow: rgb(14 14 44 / 40%) 0px -1px 0px 0px inset;
+  }
+}

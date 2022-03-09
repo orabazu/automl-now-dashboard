@@ -2,7 +2,7 @@ import { Table, TablePaginationConfig } from 'antd';
 import Title from 'antd/lib/typography/Title';
 // import mockData from 'assets/mockData.json';
 import React, { useState } from 'react';
-import { HeadersType, RowType } from 'views/Main';
+import { HeadersType, RowType } from 'views/ReportGenerator';
 
 type DataOverviewProps = {
   data: RowType;

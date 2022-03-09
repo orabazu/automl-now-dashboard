@@ -1,0 +1,17 @@
+li.ant-list-item {
+  background: white;
+  box-shadow: rgb(14 14 44 / 40%) 0px -1px 0px 0px inset;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.actions {
+  display: flex;
+  margin-left: 46px;
+}
+
+.Hero {
+  > .ant-result-icon {
+    display: none;
+  }
+}
