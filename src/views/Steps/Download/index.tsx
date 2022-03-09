@@ -2,13 +2,14 @@
 /* eslint-disable react/display-name */
 import './Download.scss';
 
-import { Button } from 'antd';
+import { Button, Card, notification } from 'antd';
+import Meta from 'antd/lib/card/Meta';
 import { useAccountContext } from 'contexts/accountContext';
 import React, { useState } from 'react';
 import { postData } from 'utils/http';
 
 export const Download = () => {
-  const [accountState, accountDispatch] = useAccountContext();
+  const [accountState] = useAccountContext();
 
   const [token, setToken] = useState();
 
@@ -27,17 +28,13 @@ export const Download = () => {
     await client.connect();
 
     console.log('\n\n----------------Mint Token----------------');
-
-    // Note that you must convert the token URL to a hexadecimal
-    // value for this transaction.
-    // ----------------------------------------------------------
-
-    const tokenUrl = 'ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf4dfuylqabf3oclgtqy55fbzdi';
+    const ipfsUrl =
+      'ipfs://QmNqAJtadcGSq2vTxcsJEYPU3BYUznxQCb1d59aC6tC115?filename=iris_Data_Analysis.pdf';
 
     const transactionBlob = {
       TransactionType: 'NFTokenMint',
       Account: wallet.classicAddress,
-      URI: xrpl.convertStringToHex(tokenUrl),
+      URI: xrpl.convertStringToHex(ipfsUrl),
       Flags: 1, // TODO put that into input
       TokenTaxon: 0, //Required, but if you have no use for it, set to zero.
     };
@@ -58,6 +55,14 @@ export const Download = () => {
       'Balance changes:',
       JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2),
     );
+
+    notification.open({
+      message: 'Minted NFT succesfully',
+      description: 'You will be redirected to dashboard',
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
 
     // Get Account Info to update Balance after Minting Token
     // getAccountInfo();
@@ -212,16 +217,31 @@ export const Download = () => {
     <>
       <div className="download-footer">
         <pre>{JSON.stringify(accountState)}</pre>
-        <Button type="primary" onClick={mintToken}>
-          Mint
-        </Button>
+        <Card
+          style={{ width: 300 }}
+          cover={
+            <img
+              alt="example"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3cXtv77N7Lp7xFOiRum0a13pcg-u7UpGnlQ&usqp=CAU"
+            />
+          }
+          actions={[
+            <Button type="primary" onClick={mintToken} key="mint">
+              Mint PDF report
+            </Button>,
+          ]}>
+          <Meta
+            title="IrisClassificationResults"
+            description="You can generate an NFT of that report by clicking Mint PDF Report"
+          />
+        </Card>
+
         <Button type="primary" onClick={getOffers}>
           Get sell offers
         </Button>
         <Button type="primary" onClick={createSellOffer}>
           Create sell offer
         </Button>
-        <Button>I need better results. Please delete my data.</Button>
 
         <div>----------</div>
 

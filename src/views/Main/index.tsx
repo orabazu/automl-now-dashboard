@@ -7,6 +7,7 @@ import { AccountActionTypes } from 'reducers/accountReducer';
 import { formatAccount } from 'utils/common';
 import { DataOverview } from 'views/Steps/DataOverview';
 import { Download } from 'views/Steps/Download';
+import { Results } from 'views/Steps/Results';
 import { TargetSelection } from 'views/Steps/TargetSelection';
 import UploadData from 'views/Steps/UploadData';
 import WelcomeStep from 'views/Steps/WelcomeStep';
@@ -73,7 +74,7 @@ const Main = () => {
     },
     {
       title: 'Results',
-      content: <Download />,
+      content: <Results />,
     },
     {
       title: 'Download',

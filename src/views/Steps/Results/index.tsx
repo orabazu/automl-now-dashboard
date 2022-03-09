@@ -1,20 +1,11 @@
 /* eslint-disable react/display-name */
-import './Download.scss';
+import './Results.scss';
 
-import { Button, Descriptions, Space } from 'antd';
+import { Descriptions, Space } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import React from 'react';
 
 export const Results = () => {
-  const download = () => {
-    const link = document.createElement('a');
-    link.href = `http://www.africau.edu/images/default/sample.pdf`;
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
     <>
       <div className="Regression">
