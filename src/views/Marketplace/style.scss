@@ -1,3 +1,28 @@
 .MarketPlace {
-  padding-top: 100px;
+  padding: 100px 30px;
+
+  .offer {
+    // background: radial-gradient(94.32% 94.6% at 4.04% -44.6%, #7ec1ff 0%, #002b5e00 100%),
+    //   linear-gradient(0deg, #ffffff, #e6f7ff);
+    border-radius: 16px;
+    padding: 15px;
+    display: flex;
+    border-radius: 16px;
+    border: 2px solid #353535;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    width: 500px;
+    margin: auto;
+  }
+  .price {
+    font-size: 21px;
+  }
+
+  .makeOffer {
+    border: 2px solid #353535;
+    border-radius: 16px;
+    padding: 15px;
+    margin-top: 30px;
+  }
 }

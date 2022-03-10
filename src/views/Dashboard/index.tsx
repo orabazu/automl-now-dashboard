@@ -20,7 +20,7 @@ import { getAccountInfo, useAccountContext } from 'contexts/accountContext';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-type SellOfferType = {
+export type SellOfferType = {
   amount: string;
   flags: number;
   index: string;
@@ -155,7 +155,7 @@ const Dashboard = () => {
             <Button type="primary">Generate Report</Button>
           </Link>,
           <Link to="marketplace" key="marketplace">
-            <Button key="buy">MarketPlace</Button>
+            <Button key="buy">Buy Report</Button>
           </Link>,
         ]}
       />
@@ -205,14 +205,14 @@ const Dashboard = () => {
 
                 <Divider />
                 {item.nftSellOffers?.length && (
-                  <Descriptions title="Sell Offers">
+                  <Descriptions title="Your Sell Offers">
                     {item.nftSellOffers?.map((offer) => (
                       <>
-                        <Descriptions.Item label="Offered By" key={offer.index}>
+                        {/* <Descriptions.Item label="Offered By" key={offer.index}>
                           {offer.owner === accountState.account?.address
                             ? accountState.account?.address + '(Me)'
                             : offer.owner}
-                        </Descriptions.Item>
+                        </Descriptions.Item> */}
                         <Descriptions.Item label="Price" key={'offer'}>
                           {offer.amount} XRP
                         </Descriptions.Item>
