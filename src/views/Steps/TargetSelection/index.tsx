@@ -3,7 +3,6 @@ import './TargetSelection.scss';
 
 import { Select, Space, Table } from 'antd';
 import Text from 'antd/lib/typography/Text';
-// import mockData from 'assets/mockData.json';
 import {
   DataColumnType,
   DataType,
