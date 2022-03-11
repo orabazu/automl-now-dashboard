@@ -1,3 +1,5 @@
+import './Header.scss';
+
 import { Button, Divider, Modal, PageHeader } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import Logo from 'assets/logo.png';
@@ -17,8 +19,6 @@ export type HeadersType =
       key: string;
     }[]
   | undefined;
-
-import './Header.scss';
 
 const Header = () => {
   const [accountState, accountDispatch] = useAccountContext();

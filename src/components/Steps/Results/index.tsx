@@ -25,7 +25,7 @@ export const Results = () => {
         <Title level={3}>Classification Performance</Title>
       </Space>
 
-      <div className="ant-table-wrapper Download">
+      <div className="ant-table-wrapper Classification">
         <table
           className="ant-table ant-table-small"
           style={{

@@ -55,12 +55,10 @@ const Dashboard = () => {
       account: wallet.classicAddress,
     });
 
-    console.log(nfts);
-
     setAccountNFTs(nfts.result.account_nfts);
     setNftsLoading(false);
     client.disconnect();
-  } //End of getTokens
+  }
 
   useEffect(() => {
     if (accountState.account?.address) {
@@ -68,12 +66,7 @@ const Dashboard = () => {
     }
   }, [accountState.account?.address]);
 
-  //***************************
-  //** Get Offers *************
-  //***************************
-
   async function getOffers(tokenId: string) {
-    // const wallet = xrpl.Wallet.fromSeed(accountState.account?.secret);
     const client = new xrpl.Client('wss://xls20-sandbox.rippletest.net:51233');
     await client.connect();
     console.log('***Sell Offers***');
@@ -128,9 +121,8 @@ const Dashboard = () => {
 
     const tx = await client.submitAndWait(transactionBlob, { wallet });
     console.log('Burned', tx);
-    // Get Account Info to update Balance after Minting Token
-    getAccountInfo(accountDispatch, accountState);
 
+    getAccountInfo(accountDispatch, accountState);
     getNFTs();
     setNftsLoading(false);
   }
@@ -149,7 +141,6 @@ const Dashboard = () => {
             </h3>
           </>
         }
-        // subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
         extra={[
           <Link to="generate-report" key="generate-report">
             <Button type="primary">Generate Report</Button>

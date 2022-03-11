@@ -10,12 +10,13 @@ import {
   initialState,
   reducer,
 } from '../reducers/accountReducer';
-type AccountContextType = [AccountState, React.Dispatch<AccountAction>] | null;
+type AccountContextType = [AccountState, React.Dispatch<AccountAction>];
 
 export type Props = {
   children: React.ReactNode;
 };
 
+//@ts-ignore
 const AccountContext = createContext<AccountContextType>(null);
 const AccountContextProvider = (props: Props): JSX.Element => {
   const [accountState, accountDispatch] = useReducer(reducer, initialState);
