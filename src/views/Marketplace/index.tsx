@@ -98,7 +98,7 @@ export const MarketPlace = () => {
   return (
     <div className="MarketPlace">
       <div>
-        <Title level={2} style={{ textAlign: 'center' }}>
+        <Title level={3} style={{ textAlign: 'center' }}>
           Buy Report
         </Title>
       </div>
@@ -112,21 +112,18 @@ export const MarketPlace = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
         form={form}>
-        <Row>
-          <Col span={16}>
-            <Form.Item
-              label="TokenID"
-              name="TokenID"
-              rules={[{ required: true, message: 'Please input TokenID!' }]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Button onClick={() => getSellOffers()} icon={<DownloadOutlined />}>
-              Get sell offers
-            </Button>
-          </Col>
-        </Row>
+        <div className="flex flex-center">
+          <Form.Item
+            style={{ width: '500px' }}
+            label="TokenID"
+            name="TokenID"
+            rules={[{ required: true, message: 'Please input TokenID!' }]}>
+            <Input />
+          </Form.Item>
+          <Button onClick={() => getSellOffers()} icon={<DownloadOutlined />}>
+            Get sell offers
+          </Button>
+        </div>
 
         {form.getFieldValue('TokenID') && (
           <Row>
@@ -136,20 +133,26 @@ export const MarketPlace = () => {
               </Title>
               {sellOffers?.length
                 ? sellOffers?.map((offer) => (
-                    <div className="offer" key={offer.index}>
+                    <div className="offer card" key={offer.index}>
                       <div className="price">
                         <span className="price">Current price</span>
                         <span> {offer.amount} XRP</span>
                       </div>
-                      <Button type="primary" onClick={acceptSellOffer}>
+                      <Button
+                        type="primary"
+                        onClick={acceptSellOffer}
+                        disabled={!accountState.account?.address}>
                         Buy Now
                       </Button>
                     </div>
                   ))
                 : 'No offers'}
             </Col>
-            <Col span={24} className="makeOffer">
-              <Title level={3} style={{ textAlign: 'center' }}>
+            <Col span={24} className="makeOffer card">
+              <Title
+                level={3}
+                style={{ textAlign: 'center' }}
+                disabled={!accountState.account?.address}>
                 Make Offer
               </Title>
               <Form.Item

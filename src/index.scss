@@ -89,3 +89,17 @@
 .flex {
   display: flex;
 }
+
+.flex-center {
+  justify-content: center;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 24px;
+  border: 3px solid $light-gray;
+}
+
+input {
+  border-radius: 14px !important;
+}
