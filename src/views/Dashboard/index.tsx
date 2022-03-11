@@ -4,7 +4,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import './style.scss';
 
-import { Avatar, Button, Descriptions, List, Result, Space } from 'antd';
+import { Button, List, Result, Space } from 'antd';
+import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
 import Logo from 'assets/logo.png';
 import { getAccountInfo, useAccountContext } from 'contexts/accountContext';
@@ -141,12 +142,7 @@ const Dashboard = () => {
           </Link>,
         ]}
       />
-      <Space
-        direction="vertical"
-        style={{
-          padding: '20px 50px',
-          width: '100%',
-        }}>
+      <div className="NFTList">
         <Title level={2}>Your NFTs</Title>
         <List
           className="demo-loadmore-list"
@@ -161,50 +157,52 @@ const Dashboard = () => {
           // }}
           dataSource={accountNFTs}
           renderItem={(item) => (
-            <List.Item
-              className="card"
-              actions={[
-                <a key="list-loadmore-edit">Sell</a>,
-                <a key="list-loadmore-more" onClick={() => burnToken(item.TokenID)}>
-                  Burn
-                </a>,
-              ]}>
+            <List.Item className="card NFTCard">
               <Space direction="vertical" style={{ width: '100%' }}>
                 <List.Item.Meta
-                  avatar={
-                    <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3cXtv77N7Lp7xFOiRum0a13pcg-u7UpGnlQ&usqp=CAU" />
-                  }
-                  title={item.TokenID}
+                  title={`#${item.TokenID}`}
                   description={xrpl.convertHexToString(item.URI)}
                 />
 
-                <p className="actions">Owner: {accountState.account?.address}</p>
+                <p className="actions owned">Owned by: {accountState.account?.address}</p>
 
                 <div className="actions">
-                  <Button onClick={() => getOffers(item.TokenID)}>Get Offers</Button>
+                  <Button onClick={() => getOffers(item.TokenID)} className={'btn-fancy'}>
+                    Sync Sales
+                  </Button>
+
+                  <div className="actions-right">
+                    <Button className={'btn-fancy'} style={{ marginRight: '5px' }}>
+                      Put on sale
+                    </Button>
+                    <Button onClick={() => burnToken(item.TokenID)}>Burn</Button>
+                  </div>
                 </div>
 
                 {item.nftSellOffers?.length && (
-                  <Descriptions title="Your Sell Offers">
+                  <>
+                    <Text>On sale for</Text>
                     {item.nftSellOffers?.map((offer) => (
-                      <>
-                        {/* <Descriptions.Item label="Offered By" key={offer.index}>
-                          {offer.owner === accountState.account?.address
-                            ? accountState.account?.address + '(Me)'
-                            : offer.owner}
-                        </Descriptions.Item> */}
-                        <Descriptions.Item label="Price" key={'offer'}>
-                          {offer.amount} XRP
-                        </Descriptions.Item>
-                      </>
+                      <span key={offer.index}>{offer.amount} XRP</span>
                     ))}
-                  </Descriptions>
+                  </>
                 )}
+
+                <>
+                  <Text>Current Bids</Text>{' '}
+                  {item.nftBuyOffers?.length ? (
+                    item.nftSellOffers?.map((offer) => (
+                      <span key={offer.index}>{offer.amount} XRP</span>
+                    ))
+                  ) : (
+                    <Text>No bids</Text>
+                  )}
+                </>
               </Space>
             </List.Item>
           )}
         />
-      </Space>
+      </div>
     </>
   );
 };
