@@ -1,6 +1,6 @@
 import './Header.scss';
 
-import { Button, Divider, Modal, PageHeader } from 'antd';
+import { Button, Divider, message, Modal, PageHeader } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import Logo from 'assets/logo.png';
 import { connectWallet, useAccountContext } from 'contexts/accountContext';
@@ -41,6 +41,13 @@ const Header = () => {
 
   const importWallet = () => connectWallet(accountDispatch, seed).then(() => handleOk());
 
+  const showAccount = () => {
+    message.open({
+      type: 'info',
+      content: accountState.account?.address,
+    });
+  };
+
   useEffect(() => {
     if (accountState.account?.address) {
       accountDispatch({
@@ -78,7 +85,10 @@ const Header = () => {
               <Button>{accountState.account?.balance} XRP</Button>
             )}
 
-            <Button loading={accountState.isLoading} type="primary" onClick={showModal}>
+            <Button
+              loading={accountState.isLoading}
+              type="primary"
+              onClick={accountState.account?.address ? showAccount : showModal}>
               {accountState.account?.address
                 ? formatAccount(accountState.account?.address)
                 : 'Connect Wallet'}
