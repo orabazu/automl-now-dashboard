@@ -7,11 +7,33 @@ li.ant-list-item {
 
 .actions {
   display: flex;
-  margin-left: 46px;
+  justify-content: space-between;
+}
+
+.owned {
+  background: -webkit-linear-gradient(
+    0deg,
+    #096dd9 -5.04%,
+    #e97902 46.01%,
+    #1890ff 96.01%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-right: 0.25rem;
 }
 
 .Hero {
   > .ant-result-icon {
     display: none;
   }
+}
+
+.NFTList {
+  padding: 20px 50px;
+  max-width: 815px;
+  margin: auto;
+}
+
+.NFTCard {
+  padding: 30px !important;
 }

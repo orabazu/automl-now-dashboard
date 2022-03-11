@@ -4,16 +4,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import './style.scss';
 
-import {
-  Avatar,
-  Button,
-  Descriptions,
-  Divider,
-  List,
-  Result,
-  Skeleton,
-  Space,
-} from 'antd';
+import { Button, List, Result, Space } from 'antd';
+import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
 import Logo from 'assets/logo.png';
 import { getAccountInfo, useAccountContext } from 'contexts/accountContext';
@@ -55,12 +47,10 @@ const Dashboard = () => {
       account: wallet.classicAddress,
     });
 
-    console.log(nfts);
-
     setAccountNFTs(nfts.result.account_nfts);
     setNftsLoading(false);
     client.disconnect();
-  } //End of getTokens
+  }
 
   useEffect(() => {
     if (accountState.account?.address) {
@@ -68,12 +58,7 @@ const Dashboard = () => {
     }
   }, [accountState.account?.address]);
 
-  //***************************
-  //** Get Offers *************
-  //***************************
-
   async function getOffers(tokenId: string) {
-    // const wallet = xrpl.Wallet.fromSeed(accountState.account?.secret);
     const client = new xrpl.Client('wss://xls20-sandbox.rippletest.net:51233');
     await client.connect();
     console.log('***Sell Offers***');
@@ -128,9 +113,8 @@ const Dashboard = () => {
 
     const tx = await client.submitAndWait(transactionBlob, { wallet });
     console.log('Burned', tx);
-    // Get Account Info to update Balance after Minting Token
-    getAccountInfo(accountDispatch, accountState);
 
+    getAccountInfo(accountDispatch, accountState);
     getNFTs();
     setNftsLoading(false);
   }
@@ -149,7 +133,6 @@ const Dashboard = () => {
             </h3>
           </>
         }
-        // subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
         extra={[
           <Link to="generate-report" key="generate-report">
             <Button type="primary">Generate Report</Button>
@@ -159,72 +142,67 @@ const Dashboard = () => {
           </Link>,
         ]}
       />
-      <Space
-        direction="vertical"
-        style={{
-          padding: '20px 50px',
-          width: '100%',
-        }}>
+      <div className="NFTList">
         <Title level={2}>Your NFTs</Title>
         <List
           className="demo-loadmore-list"
-          // loading={initLoading}
+          loading={nftsLoading}
           itemLayout="horizontal"
           // loadMore={loadMore}
-          pagination={{
-            onChange: (page) => {
-              console.log(page);
-            },
-            pageSize: 10,
-          }}
+          // pagination={{
+          //   onChange: (page) => {
+          //     console.log(page);
+          //   },
+          //   pageSize: 10,
+          // }}
           dataSource={accountNFTs}
           renderItem={(item) => (
-            <List.Item
-              actions={[
-                <a key="list-loadmore-edit">Sell</a>,
-                <a key="list-loadmore-more" onClick={() => burnToken(item.TokenID)}>
-                  Burn
-                </a>,
-              ]}>
+            <List.Item className="card NFTCard">
               <Space direction="vertical" style={{ width: '100%' }}>
-                <Skeleton avatar title={true} loading={nftsLoading} active>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3cXtv77N7Lp7xFOiRum0a13pcg-u7UpGnlQ&usqp=CAU" />
-                    }
-                    title={item.TokenID}
-                    description={xrpl.convertHexToString(item.URI)}
-                  />
-                </Skeleton>
+                <List.Item.Meta
+                  title={`#${item.TokenID}`}
+                  description={xrpl.convertHexToString(item.URI)}
+                />
 
-                <p className="actions">Owner: {accountState.account?.address}</p>
+                <p className="actions owned">Owned by: {accountState.account?.address}</p>
 
                 <div className="actions">
-                  <Button onClick={() => getOffers(item.TokenID)}>Get Offers</Button>
+                  <Button onClick={() => getOffers(item.TokenID)} className={'btn-fancy'}>
+                    Sync Sales
+                  </Button>
+
+                  <div className="actions-right">
+                    <Button className={'btn-fancy'} style={{ marginRight: '5px' }}>
+                      Put on sale
+                    </Button>
+                    <Button onClick={() => burnToken(item.TokenID)}>Burn</Button>
+                  </div>
                 </div>
 
-                <Divider />
                 {item.nftSellOffers?.length && (
-                  <Descriptions title="Your Sell Offers">
+                  <>
+                    <Text>On sale for</Text>
                     {item.nftSellOffers?.map((offer) => (
-                      <>
-                        {/* <Descriptions.Item label="Offered By" key={offer.index}>
-                          {offer.owner === accountState.account?.address
-                            ? accountState.account?.address + '(Me)'
-                            : offer.owner}
-                        </Descriptions.Item> */}
-                        <Descriptions.Item label="Price" key={'offer'}>
-                          {offer.amount} XRP
-                        </Descriptions.Item>
-                      </>
+                      <span key={offer.index}>{offer.amount} XRP</span>
                     ))}
-                  </Descriptions>
+                  </>
                 )}
+
+                <>
+                  <Text>Current Bids</Text>{' '}
+                  {item.nftBuyOffers?.length ? (
+                    item.nftSellOffers?.map((offer) => (
+                      <span key={offer.index}>{offer.amount} XRP</span>
+                    ))
+                  ) : (
+                    <Text>No bids</Text>
+                  )}
+                </>
               </Space>
             </List.Item>
           )}
         />
-      </Space>
+      </div>
     </>
   );
 };

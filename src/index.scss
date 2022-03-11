@@ -8,7 +8,12 @@
 
 .button-color {
   background-color: $primary-color;
-  color: white;
+  color: $white;
+}
+
+.button-fancy {
+  background: linear-gradient(77deg, #096dd9 -8.72%, #1890ff 120.58%) !important;
+  color: $white !important;
 }
 
 .ant-btn {
@@ -48,6 +53,26 @@
 
   &:focus {
     @extend .button-color;
+  }
+}
+
+.btn-fancy {
+  @extend .button-fancy;
+
+  &:hover {
+    opacity: 0.65;
+    @extend .button-fancy;
+  }
+
+  &:active {
+    opacity: 0.85;
+    transform: translateY(1px);
+    box-shadow: none;
+    @extend .button-fancy;
+  }
+
+  &:focus {
+    @extend .button-fancy;
   }
 }
 
@@ -102,4 +127,10 @@
 
 input {
   border-radius: 14px !important;
+}
+
+.modal-action {
+  display: flex;
+  padding: 10px 0;
+  justify-content: center;
 }

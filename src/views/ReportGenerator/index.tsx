@@ -1,13 +1,13 @@
+import { DataOverview } from 'components/Steps/DataOverview';
+import { Download } from 'components/Steps/Download';
+import { Results } from 'components/Steps/Results';
+import { TargetSelection } from 'components/Steps/TargetSelection';
+import UploadData from 'components/Steps/UploadData';
+import WelcomeStep from 'components/Steps/WelcomeStep';
 import { Wizard } from 'components/Wizard';
 import { useAccountContext } from 'contexts/accountContext';
 import React, { useEffect, useState } from 'react';
 import { AccountActionTypes } from 'reducers/accountReducer';
-import { DataOverview } from 'views/Steps/DataOverview';
-import { Download } from 'views/Steps/Download';
-import { Results } from 'views/Steps/Results';
-import { TargetSelection } from 'views/Steps/TargetSelection';
-import UploadData from 'views/Steps/UploadData';
-import WelcomeStep from 'views/Steps/WelcomeStep';
 
 // import xrpLogo from '../../assets/xrp.png';
 

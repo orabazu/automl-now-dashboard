@@ -1,15 +1,15 @@
 import { Button, PageHeader } from 'antd';
 import Logo from 'assets/logo.png';
+import { DataOverview } from 'components/Steps/DataOverview';
+import { Download } from 'components/Steps/Download';
+import { TargetSelection } from 'components/Steps/TargetSelection';
+import UploadData from 'components/Steps/UploadData';
+import WelcomeStep from 'components/Steps/WelcomeStep';
 import { Wizard } from 'components/Wizard';
 import { connectWallet, useAccountContext } from 'contexts/accountContext';
 import React, { useEffect, useState } from 'react';
 import { AccountActionTypes } from 'reducers/accountReducer';
 import { formatAccount } from 'utils/common';
-import { DataOverview } from 'views/Steps/DataOverview';
-import { Download } from 'views/Steps/Download';
-import { TargetSelection } from 'views/Steps/TargetSelection';
-import UploadData from 'views/Steps/UploadData';
-import WelcomeStep from 'views/Steps/WelcomeStep';
 
 export type RowType = { [k: string]: any }[];
 export type HeadersType =

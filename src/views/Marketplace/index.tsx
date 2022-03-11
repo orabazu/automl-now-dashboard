@@ -11,6 +11,7 @@ export const MarketPlace = () => {
   const [accountState] = useAccountContext();
   const [form] = Form.useForm();
   const [sellOffers, setSellOffers] = useState<SellOfferType[]>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onFinish = async (values: any) => {
     const wallet = xrpl.Wallet.fromSeed(accountState.account?.secret);
@@ -59,6 +60,7 @@ export const MarketPlace = () => {
   };
 
   const getSellOffers = async () => {
+    setIsLoading(true);
     const client = new xrpl.Client('wss://xls20-sandbox.rippletest.net:51233');
     await client.connect();
     const tokenId = form.getFieldValue('TokenID');
@@ -72,6 +74,8 @@ export const MarketPlace = () => {
       setSellOffers(nftSellOffers?.result?.offers || []);
     } catch (err) {
       console.log('No sell offers.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -97,89 +101,98 @@ export const MarketPlace = () => {
 
   return (
     <div className="MarketPlace">
-      <div>
-        <Title level={3} style={{ textAlign: 'center' }}>
-          Buy Report
+      <div className="MarketPlaceWrapper">
+        <Title level={1} style={{ textAlign: 'left', marginBottom: '30px' }}>
+          Buy single report item on XRP Ledger
         </Title>
-      </div>
 
-      <Form
-        name="basic"
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 16 }}
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-        form={form}>
-        <div className="flex flex-center">
-          <Form.Item
-            style={{ width: '500px' }}
-            label="TokenID"
-            name="TokenID"
-            rules={[{ required: true, message: 'Please input TokenID!' }]}>
-            <Input />
-          </Form.Item>
-          <Button onClick={() => getSellOffers()} icon={<DownloadOutlined />}>
-            Get sell offers
-          </Button>
-        </div>
+        <Form
+          name="basic"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 16 }}
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+          form={form}>
+          <Title level={3} style={{ textAlign: 'left' }}>
+            Get from marketplace
+          </Title>
+          <div className="flex card TokenForm">
+            <Form.Item
+              style={{ width: '500px', margin: 0 }}
+              label="TokenID"
+              name="TokenID"
+              rules={[{ required: true, message: 'Please input TokenID!' }]}>
+              <Input />
+            </Form.Item>
+            <Button
+              onClick={() => getSellOffers()}
+              icon={<DownloadOutlined />}
+              loading={isLoading}>
+              Get sell offers
+            </Button>
+          </div>
 
-        {form.getFieldValue('TokenID') && (
-          <Row>
-            <Col span={24}>
-              <Title level={3} style={{ textAlign: 'center' }}>
-                Current Offers
-              </Title>
-              {sellOffers?.length
-                ? sellOffers?.map((offer) => (
-                    <div className="offer card" key={offer.index}>
-                      <div className="price">
-                        <span className="price">Current price</span>
-                        <span> {offer.amount} XRP</span>
+          {form.getFieldValue('TokenID') && (
+            <Row>
+              <Col span={12}>
+                <Title level={3} style={{ textAlign: 'left' }}>
+                  Current Offers
+                </Title>
+                {sellOffers?.length
+                  ? sellOffers?.map((offer) => (
+                      <div className="offer card" key={offer.index}>
+                        <div className="price">
+                          <span className="price">Current price</span>
+                          <span> {offer.amount} XRP</span>
+                        </div>
+                        <Button
+                          type="primary"
+                          onClick={acceptSellOffer}
+                          disabled={!accountState.account?.address}>
+                          Buy Now
+                        </Button>
                       </div>
-                      <Button
-                        type="primary"
-                        onClick={acceptSellOffer}
-                        disabled={!accountState.account?.address}>
-                        Buy Now
-                      </Button>
-                    </div>
-                  ))
-                : 'No offers'}
-            </Col>
-            <Col span={24} className="makeOffer card">
-              <Title
-                level={3}
-                style={{ textAlign: 'center' }}
-                disabled={!accountState.account?.address}>
-                Make Offer
-              </Title>
-              <Form.Item
-                label="Owner"
-                name="Owner"
-                rules={[{ required: true, message: 'Please input owner of the token!' }]}>
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Amount"
-                name="Amount"
-                rules={[{ required: true, message: 'Please input Price' }]}>
-                <Input type="number" />
-              </Form.Item>
-              <Form.Item
-                label="Flags"
-                name="Flags"
-                rules={[{ required: true, message: 'Please input Flags' }]}>
-                <Input />
-              </Form.Item>
-              <Form.Item wrapperCol={{ offset: 16, span: 16 }}>
-                <Button htmlType="submit">Make Offer</Button>
-              </Form.Item>
-            </Col>
-          </Row>
-        )}
-      </Form>
+                    ))
+                  : 'No offers'}
+              </Col>
+              <Col span={12} className="">
+                <Title level={3} style={{ textAlign: 'left' }}>
+                  Make Offer
+                </Title>
+                <div className="card makeOffer">
+                  <Form.Item
+                    label="Owner"
+                    name="Owner"
+                    rules={[
+                      { required: true, message: 'Please input owner of the token!' },
+                    ]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Amount"
+                    name="Amount"
+                    rules={[{ required: true, message: 'Please input Price' }]}>
+                    <Input type="number" />
+                  </Form.Item>
+                  <Form.Item
+                    label="Flags"
+                    name="Flags"
+                    rules={[{ required: true, message: 'Please input Flags' }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button htmlType="submit" disabled={!accountState.account?.address}>
+                      Make Offer
+                    </Button>
+                  </Form.Item>
+                </div>
+              </Col>
+            </Row>
+          )}
+        </Form>
+      </div>
     </div>
   );
 };
