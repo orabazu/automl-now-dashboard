@@ -4,16 +4,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import './style.scss';
 
-import {
-  Avatar,
-  Button,
-  Descriptions,
-  Divider,
-  List,
-  Result,
-  Skeleton,
-  Space,
-} from 'antd';
+import { Avatar, Button, Descriptions, List, Result, Space } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import Logo from 'assets/logo.png';
 import { getAccountInfo, useAccountContext } from 'contexts/accountContext';
@@ -159,18 +150,19 @@ const Dashboard = () => {
         <Title level={2}>Your NFTs</Title>
         <List
           className="demo-loadmore-list"
-          // loading={initLoading}
+          loading={nftsLoading}
           itemLayout="horizontal"
           // loadMore={loadMore}
-          pagination={{
-            onChange: (page) => {
-              console.log(page);
-            },
-            pageSize: 10,
-          }}
+          // pagination={{
+          //   onChange: (page) => {
+          //     console.log(page);
+          //   },
+          //   pageSize: 10,
+          // }}
           dataSource={accountNFTs}
           renderItem={(item) => (
             <List.Item
+              className="card"
               actions={[
                 <a key="list-loadmore-edit">Sell</a>,
                 <a key="list-loadmore-more" onClick={() => burnToken(item.TokenID)}>
@@ -178,15 +170,13 @@ const Dashboard = () => {
                 </a>,
               ]}>
               <Space direction="vertical" style={{ width: '100%' }}>
-                <Skeleton avatar title={true} loading={nftsLoading} active>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3cXtv77N7Lp7xFOiRum0a13pcg-u7UpGnlQ&usqp=CAU" />
-                    }
-                    title={item.TokenID}
-                    description={xrpl.convertHexToString(item.URI)}
-                  />
-                </Skeleton>
+                <List.Item.Meta
+                  avatar={
+                    <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3cXtv77N7Lp7xFOiRum0a13pcg-u7UpGnlQ&usqp=CAU" />
+                  }
+                  title={item.TokenID}
+                  description={xrpl.convertHexToString(item.URI)}
+                />
 
                 <p className="actions">Owner: {accountState.account?.address}</p>
 
@@ -194,7 +184,6 @@ const Dashboard = () => {
                   <Button onClick={() => getOffers(item.TokenID)}>Get Offers</Button>
                 </div>
 
-                <Divider />
                 {item.nftSellOffers?.length && (
                   <Descriptions title="Your Sell Offers">
                     {item.nftSellOffers?.map((offer) => (
