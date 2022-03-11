@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { SmileOutlined } from '@ant-design/icons';
 import { notification } from 'antd';
 import React, { createContext, useContext, useReducer } from 'react';
@@ -11,13 +10,12 @@ import {
   initialState,
   reducer,
 } from '../reducers/accountReducer';
-type AccountContextType = [AccountState, React.Dispatch<AccountAction>];
+type AccountContextType = [AccountState, React.Dispatch<AccountAction>] | null;
 
 export type Props = {
   children: React.ReactNode;
 };
 
-//@ts-ignore
 const AccountContext = createContext<AccountContextType>(null);
 const AccountContextProvider = (props: Props): JSX.Element => {
   const [accountState, accountDispatch] = useReducer(reducer, initialState);
@@ -52,13 +50,6 @@ async function connectWallet(
         icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       });
     }
-
-    // possibly const test_wallet = xrpl.Wallet.generate()
-    // not expose secret on UI
-    // these are credentials
-
-    // TODO ask if secret exist or not
-    // const wallet = xrpl.Wallet.fromSeed('shyTfxCW4gHNUbvYbv77LZdtQErRk');
 
     const { address, seed, classicAddress, secret } = wallet;
     console.log(wallet, seed, secret);
@@ -111,8 +102,8 @@ async function getAccountInfo(
   const wallet = xrpl.Wallet.fromSeed(state.account?.secret);
   const client = new xrpl.Client('wss://xls20-sandbox.rippletest.net:51233');
   await client.connect();
+
   console.log('\n\n----------------Get Account Info----------------');
-  // const nfts = await client.request({
   const response = await client.request({
     command: 'account_info',
     account: wallet.address,
@@ -129,7 +120,7 @@ async function getAccountInfo(
   dispatch({ type: AccountActionTypes.SET_ACCOUNT, payload });
   dispatch({ type: AccountActionTypes.SET_IS_ACCOUNT_LOADING, payload: false });
   client.disconnect();
-} //End of getAccountInfo
+}
 
 const useAccountContext = () => useContext(AccountContext);
 
