@@ -1,6 +1,6 @@
 @import '../../styles/colors.scss';
 
-.Main {
+.Header {
   .PageHeader {
     border-bottom: 1px solid $light-gray;
   }
@@ -16,4 +16,13 @@
   // background: radial-gradient(94.32% 94.6% at 4.04% -44.6%, #7ec1ff 0%, #002b5e00 100%),
   //   linear-gradient(0deg, #f0f0f0, #e6f7ff);
   // height: 100vh;
+  .ant-divider {
+    margin: 0;
+  }
+}
+
+.modal-action {
+  display: flex;
+  padding: 10px 0;
+  justify-content: center;
 }

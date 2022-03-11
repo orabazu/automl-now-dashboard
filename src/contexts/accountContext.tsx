@@ -1,4 +1,6 @@
 /* eslint-disable no-undef */
+import { SmileOutlined } from '@ant-design/icons';
+import { notification } from 'antd';
 import React, { createContext, useContext, useReducer } from 'react';
 import { postData } from 'utils/http';
 
@@ -27,10 +29,29 @@ const AccountContextProvider = (props: Props): JSX.Element => {
   );
 };
 
-async function connectWallet(dispatch: React.Dispatch<AccountAction>) {
+async function connectWallet(
+  dispatch: React.Dispatch<AccountAction>,
+  importedSeed?: string,
+) {
   dispatch({ type: AccountActionTypes.SET_IS_ACCOUNT_LOADING, payload: true });
   try {
-    let wallet = await postData('https://faucet-nft.ripple.com/accounts', 'NFT-Devnet');
+    let wallet;
+    if (importedSeed) {
+      wallet = xrpl.Wallet.fromSeed(importedSeed);
+    } else {
+      const accounts = await postData(
+        'https://faucet-nft.ripple.com/accounts',
+        'NFT-Devnet',
+      );
+      wallet = accounts.account;
+      notification.open({
+        message:
+          'You successfully generated a new wallet, save this seed value to recover later. ' +
+          wallet.secret,
+        placement: 'bottomRight',
+        icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+      });
+    }
 
     // possibly const test_wallet = xrpl.Wallet.generate()
     // not expose secret on UI
@@ -39,7 +60,7 @@ async function connectWallet(dispatch: React.Dispatch<AccountAction>) {
     // TODO ask if secret exist or not
     // const wallet = xrpl.Wallet.fromSeed('shyTfxCW4gHNUbvYbv77LZdtQErRk');
 
-    const { address, seed, classicAddress, secret } = wallet.account;
+    const { address, seed, classicAddress, secret } = wallet;
     console.log(wallet, seed, secret);
 
     let nftNetworkUrl = 'wss://xls20-sandbox.rippletest.net:51233';

@@ -1,7 +1,8 @@
-import { Button, PageHeader } from 'antd';
+import { Button, Divider, Modal, PageHeader } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
 import Logo from 'assets/logo.png';
 import { connectWallet, useAccountContext } from 'contexts/accountContext';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { AccountActionTypes } from 'reducers/accountReducer';
 import { formatAccount } from 'utils/common';
@@ -21,6 +22,24 @@ import './Header.scss';
 
 const Header = () => {
   const [accountState, accountDispatch] = useAccountContext();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [seed, setSeed] = useState<string>();
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const generateWallet = () => connectWallet(accountDispatch).then(() => handleOk());
+
+  const importWallet = () => connectWallet(accountDispatch, seed).then(() => handleOk());
 
   useEffect(() => {
     if (accountState.account?.address) {
@@ -44,7 +63,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="Main">
+    <div className="Header">
       <PageHeader
         className="PageHeader"
         ghost={false}
@@ -59,17 +78,42 @@ const Header = () => {
               <Button>{accountState.account?.balance} XRP</Button>
             )}
 
-            <Button
-              loading={accountState.isLoading}
-              type="primary"
-              onClick={() =>
-                accountState.account?.address ? undefined : connectWallet(accountDispatch)
-              }>
+            <Button loading={accountState.isLoading} type="primary" onClick={showModal}>
               {accountState.account?.address
                 ? formatAccount(accountState.account?.address)
                 : 'Connect Wallet'}
             </Button>
             {/* <Avatar src={xrpLogo} className={'xrpLogo'} /> */}
+            <Modal
+              title="Generate a new wallet or recover from seed"
+              visible={isModalVisible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              footer={null}>
+              <TextArea
+                rows={4}
+                placeholder="Wallet seed/secret"
+                value={seed}
+                onChange={(e) => setSeed(e.target.value)}
+              />
+              <div className="flex modal-action" style={{ paddingTop: '20px' }}>
+                <Button
+                  loading={accountState.isLoading}
+                  type="primary"
+                  onClick={importWallet}>
+                  Import Wallet
+                </Button>
+              </div>
+              <Divider plain>or</Divider>
+              <div className="flex modal-action">
+                <Button
+                  loading={accountState.isLoading}
+                  type="primary"
+                  onClick={generateWallet}>
+                  Generate New Wallet
+                </Button>
+              </div>
+            </Modal>
           </>
         }></PageHeader>
       <Outlet />
