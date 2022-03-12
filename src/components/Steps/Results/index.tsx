@@ -171,10 +171,12 @@ export const Results = () => {
         </Descriptions>
 
         <div className="flex results-action">
-          <Button className="btn-fancy" onClick={openPurchaseForm}>
+          <Button className="btn-fancy" onClick={openPurchaseForm} loading={isLoading}>
             I want to purchase full report
           </Button>
-          <Button style={{ color: `red` }}> I need better results, delete my data</Button>
+          <Button style={{ color: `red` }} loading={isLoading}>
+            I need better results, delete my data
+          </Button>
         </div>
 
         {isPurchasing && !isTransactionComplete && (

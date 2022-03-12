@@ -77,7 +77,11 @@ const Header = () => {
         avatar={{
           src: Logo,
         }}
-        title={<Link to="/">AutoML.NFT </Link>}
+        title={
+          <Link to="/" className="heading">
+            AutoML.NFT
+          </Link>
+        }
         subTitle="Automate your ML, get your results as NFT"
         extra={
           <>

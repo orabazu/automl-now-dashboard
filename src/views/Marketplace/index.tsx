@@ -3,15 +3,20 @@ import './style.scss';
 import { DownloadOutlined, SmileOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, notification, Row } from 'antd';
 import Title from 'antd/lib/typography/Title';
-import { useAccountContext } from 'contexts/accountContext';
+import { getAccountInfo, useAccountContext } from 'contexts/accountContext';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SellOfferType } from 'views/Dashboard';
 
 export const MarketPlace = () => {
-  const [accountState] = useAccountContext();
+  const [accountState, accountDispatch] = useAccountContext();
   const [form] = Form.useForm();
   const [sellOffers, setSellOffers] = useState<SellOfferType[]>();
   const [isLoading, setIsLoading] = useState(false);
+
+  const transactionCost = 0.000012;
+
+  let navigate = useNavigate();
 
   const onFinish = async (values: any) => {
     const wallet = xrpl.Wallet.fromSeed(accountState.account?.secret);
@@ -80,6 +85,7 @@ export const MarketPlace = () => {
   };
 
   const acceptSellOffer = async () => {
+    setIsLoading(true);
     const wallet = xrpl.Wallet.fromSeed(accountState.account?.secret);
     const client = new xrpl.Client('wss://xls20-sandbox.rippletest.net:51233');
     await client.connect();
@@ -97,6 +103,12 @@ export const MarketPlace = () => {
       placement: 'bottomRight',
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
     });
+    setIsLoading(false);
+    getAccountInfo(accountDispatch, accountState);
+
+    client.disconnect();
+
+    navigate(`/`);
   };
 
   return (
@@ -143,18 +155,29 @@ export const MarketPlace = () => {
                 {sellOffers?.length
                   ? sellOffers?.map((offer) => (
                       <div className="offer card" key={offer.index}>
-                        <div className="price">
-                          <span className="price">Current price</span>
-                          <span> {Number(offer.amount) / 1000000} XRP</span>
+                        <div className="flex flex-space-between">
+                          <div className="price">
+                            <span className="price">Current price: </span>
+                            <span> {Number(offer.amount) / 1000000} XRP</span>
+                          </div>
+
+                          <Button
+                            type="primary"
+                            onClick={acceptSellOffer}
+                            disabled={!accountState.account?.address}
+                            loading={isLoading}>
+                            Buy Now
+                          </Button>
                         </div>
-                        <Button
-                          type="primary"
-                          onClick={acceptSellOffer}
-                          disabled={!accountState.account?.address}>
-                          Buy Now
-                        </Button>
+
+                        <p>Transaction Cost: {transactionCost} XRP</p>
+                        <p>
+                          Total: {transactionCost + Number(offer.amount) / 1000000} XRP
+                        </p>
                       </div>
                     ))
+                  : isLoading
+                  ? 'Loading'
                   : 'No offers'}
               </Col>
               {/* <Col span={12} className="">

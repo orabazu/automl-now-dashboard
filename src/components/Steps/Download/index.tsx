@@ -19,7 +19,7 @@ export const Download = () => {
   // const [tokenId, setTokenId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [offerAmount, setOfferAmount] = useState<string>();
-  const [onSale, setOnSale] = useState(true);
+  const [onSale, setOnSale] = useState(false);
 
   let navigate = useNavigate();
 
@@ -180,7 +180,7 @@ export const Download = () => {
               <Text className="fancy-description">#{accountState.lastMintedNft} </Text>
               <div className="flex flex-space-between marketplace-title">
                 <Title level={4}>Put on marketplace</Title>
-                <Switch defaultChecked onChange={onChangeSwitch} />
+                <Switch onChange={onChangeSwitch} />
               </div>
               {onSale && (
                 <Space direction="vertical">

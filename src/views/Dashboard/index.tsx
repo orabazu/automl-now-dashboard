@@ -127,10 +127,8 @@ const Dashboard = () => {
         title={
           <>
             <img src={Logo} style={{ maxWidth: '150px' }}></img>
-            <h3>
-              Machine Learning reports with just a few clicks, seamless integration with
-              NFTs on XRP Ledger
-            </h3>
+            <h3 style={{ margin: 0 }}>Machine Learning reports with just a few clicks</h3>
+            <h3>Seamless integration with NFTs for auditing on XRP Ledger</h3>
           </>
         }
         extra={[
@@ -183,7 +181,7 @@ const Dashboard = () => {
                   <>
                     <Text>On sale for</Text>
                     {item.nftSellOffers?.map((offer) => (
-                      <span key={offer.index}>{Number(offer.amount) / 10000000} XRP</span>
+                      <span key={offer.index}>{Number(offer.amount) / 1000000} XRP</span>
                     ))}
                   </>
                 )}
