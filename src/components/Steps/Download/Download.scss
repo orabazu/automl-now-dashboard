@@ -1,6 +1,49 @@
 .Download {
-  padding: 30px 0;
+  padding: 20px 50px;
+  max-width: 815px;
+  margin: auto;
   & > button {
     margin-right: 10px;
+  }
+
+  .NTFResultCard {
+    .ant-card-actions {
+      border-radius: 24px !important;
+    }
+    .ant-card-cover img {
+      border-radius: 24px 24px 0 0 !important;
+    }
+    .fancy-description {
+      background: -webkit-linear-gradient(
+        0deg,
+        #096dd9 -5.04%,
+        #e97902 46.01%,
+        #1890ff 96.01%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-right: 0.25rem;
+      padding-bottom: 10px;
+    }
+
+    .marketplace-title {
+      padding-top: 20px;
+      * {
+        margin: 0;
+      }
+    }
+
+    .subtitle {
+      font-size: 13px;
+    }
+
+    .sell-btn {
+      justify-content: end;
+    }
+
+    .label {
+      margin-top: 15px;
+      font-size: 16px;
+    }
   }
 }

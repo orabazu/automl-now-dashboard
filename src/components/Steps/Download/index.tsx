@@ -3,8 +3,9 @@
 import './Download.scss';
 
 import { SmileOutlined } from '@ant-design/icons';
-import { Button, Card, Input, notification, Space } from 'antd';
+import { Button, Card, Input, notification, Space, Switch } from 'antd';
 import Meta from 'antd/lib/card/Meta';
+import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
 import { getAccountInfo, useAccountContext } from 'contexts/accountContext';
 import React, { useState } from 'react';
@@ -18,6 +19,8 @@ export const Download = () => {
   const [tokenId, setTokenId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [offerAmount, setOfferAmount] = useState<string>();
+  const [onSale, setOnSale] = useState(true);
+
   let navigate = useNavigate();
 
   const mintToken = async () => {
@@ -133,13 +136,17 @@ export const Download = () => {
     navigate(`/`);
   };
 
+  const onChangeSwitch = () => setOnSale(!onSale);
+
   return (
     <div className="Download">
       <Title level={2}>Your Report</Title>
       <Card
-        style={{ width: 350 }}
+        className="NTFResultCard card"
+        style={{ width: 400 }}
         cover={
           <img
+            style={{ borderRadius: '24px 24px 0 0' }}
             alt="example"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3cXtv77N7Lp7xFOiRum0a13pcg-u7UpGnlQ&usqp=CAU"
           />
@@ -153,29 +160,56 @@ export const Download = () => {
             disabled={tokenId}>
             Mint NFT
           </Button>,
-          <Button
-            type="primary"
-            onClick={createSellOffer}
-            key="mint"
-            loading={isLoading}
-            disabled={!tokenId}>
-            Create Sell Offer
-          </Button>,
         ]}>
-        <Space direction="vertical" style={{ width: 300 }}>
+        <Space direction="vertical" style={{ width: 340 }}>
           <Meta
             title="IrisClassificationResults"
-            description="You can generate an NFT of that report by clicking Mint PDF Report"
+            description={
+              tokenId
+                ? ''
+                : `You can generate an NFT of that report by clicking Mint PDF Report`
+            }
           />
-          <Meta description={tokenId || ''} />
           {tokenId && (
-            <Input
-              placeholder="Amount in XRP"
-              value={offerAmount}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setOfferAmount(e.target.value)
-              }
-            />
+            <div>
+              <Meta title="Token ID" className="fancy-description" />
+              <Text className="fancy-description">#{tokenId} </Text>
+              <div className="flex flex-space-between marketplace-title">
+                <Title level={4}>Put on marketplace</Title>
+                <Switch defaultChecked onChange={onChangeSwitch} />
+              </div>
+              {onSale && (
+                <Space direction="vertical">
+                  <Text type="secondary" className="subtitle">
+                    Enter price to allow users instantly purchase your NFT
+                  </Text>
+
+                  <div
+                    className="label flex flex-space-between"
+                    style={{ alignItems: 'center' }}>
+                    <Text style={{ marginRight: 10, fontSize: 16 }}>Price: </Text>
+                    <Input
+                      placeholder="Enter price for the report in XRP"
+                      value={offerAmount}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setOfferAmount(e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="flex sell-btn">
+                    <Button
+                      className="btn-fancy"
+                      onClick={createSellOffer}
+                      key="mint"
+                      loading={isLoading}
+                      disabled={!tokenId}>
+                      Create Sell Offer
+                    </Button>
+                  </div>
+                </Space>
+              )}
+            </div>
           )}
         </Space>
       </Card>
