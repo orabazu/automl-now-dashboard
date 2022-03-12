@@ -19,7 +19,7 @@ export const Download = () => {
   // const [tokenId, setTokenId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [offerAmount, setOfferAmount] = useState<string>();
-  const [onSale, setOnSale] = useState(true);
+  const [onSale, setOnSale] = useState(false);
 
   let navigate = useNavigate();
 

@@ -1,15 +1,20 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-unused-vars */
 import './TargetSelection.scss';
 
-import { Select, Space, Table } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
+import { Button, Modal, notification, Select, Space, Table } from 'antd';
 import Text from 'antd/lib/typography/Text';
+import Advertisement from 'assets/advertisement.gif';
 import {
   DataColumnType,
   DataType,
   EditableCell,
   RoleType,
 } from 'components/EditableCell';
+import { useAccountContext } from 'contexts/accountContext';
 import React, { useEffect, useMemo, useState } from 'react';
+import { AccountActionTypes } from 'reducers/accountReducer';
 import { HeadersType, RowType } from 'views/ReportGenerator';
 
 type TargetSelectionProps = {
@@ -24,6 +29,10 @@ export type TargetSelectionData = {
 
 export const TargetSelection: React.FC<TargetSelectionProps> = ({ data }) => {
   const [rows, setRows] = useState<TargetSelectionData[]>([]);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isCalculated, setisCalculated] = useState(false);
+  const [accountState, accountDispatch] = useAccountContext();
 
   const staticColumns = [
     {
@@ -129,6 +138,31 @@ export const TargetSelection: React.FC<TargetSelectionProps> = ({ data }) => {
         return '';
     }
   };
+
+  const startCalculation = () => {
+    setIsModalVisible(true);
+    setTimeout(() => {
+      setIsModalVisible(false);
+      setisCalculated(true);
+      accountDispatch({
+        type: AccountActionTypes.SET_IS_NEXT_BUTTON_DISABLED,
+        payload: false,
+      });
+      notification.open({
+        message: 'Calculations are done.',
+        placement: 'bottomRight',
+        icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+      });
+    }, 3000);
+  };
+
+  useEffect(() => {
+    accountDispatch({
+      type: AccountActionTypes.SET_IS_NEXT_BUTTON_DISABLED,
+      payload: true,
+    });
+  }, []);
+
   return (
     <>
       <Table
@@ -156,6 +190,25 @@ export const TargetSelection: React.FC<TargetSelectionProps> = ({ data }) => {
           </Select>
         </Space>
       )}
+
+      <div className="flex">
+        <Button onClick={startCalculation} className="btn-fancy">
+          Start Calculation
+        </Button>
+      </div>
+
+      <Modal
+        centered
+        visible={isModalVisible}
+        footer={null}
+        closable={false}
+        // onOk={() => setIsModalVisible(false)}
+        // onCancel={}
+        width={780}>
+        <p>Running machine learning calculations ...</p>
+        <p>Sponsored by</p>
+        <img src={Advertisement} />
+      </Modal>
     </>
   );
 };
