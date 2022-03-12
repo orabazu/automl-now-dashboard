@@ -180,7 +180,7 @@ export const Download = () => {
               <Text className="fancy-description">#{accountState.lastMintedNft} </Text>
               <div className="flex flex-space-between marketplace-title">
                 <Title level={4}>Put on marketplace</Title>
-                <Switch defaultChecked onChange={onChangeSwitch} />
+                <Switch onChange={onChangeSwitch} />
               </div>
               {onSale && (
                 <Space direction="vertical">

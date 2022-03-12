@@ -138,3 +138,10 @@ input {
   padding: 10px 0;
   justify-content: center;
 }
+
+.heading {
+  background: -webkit-linear-gradient(341deg, #096dd9 30.01%, #e97902 70.01%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-right: 0.25rem;
+}
