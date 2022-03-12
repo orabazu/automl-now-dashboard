@@ -179,25 +179,24 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                {item.nftSellOffers?.length && (
+                {Boolean(item.nftSellOffers?.length) && (
                   <>
                     <Text>On sale for</Text>
                     {item.nftSellOffers?.map((offer) => (
-                      <span key={offer.index}>{offer.amount} XRP</span>
+                      <span key={offer.index}>{Number(offer.amount) / 10000000} XRP</span>
                     ))}
                   </>
                 )}
 
-                <>
-                  <Text>Current Bids</Text>{' '}
-                  {item.nftBuyOffers?.length ? (
-                    item.nftSellOffers?.map((offer) => (
+                {Boolean(item.nftBuyOffers?.length) && (
+                  <>
+                    <Text>Current Bids</Text> (
+                    {item.nftSellOffers?.map((offer) => (
                       <span key={offer.index}>{offer.amount} XRP</span>
-                    ))
-                  ) : (
-                    <Text>No bids</Text>
-                  )}
-                </>
+                    ))}
+                    ) : (<Text>No bids</Text>)
+                  </>
+                )}
               </Space>
             </List.Item>
           )}

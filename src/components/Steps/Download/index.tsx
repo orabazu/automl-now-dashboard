@@ -7,72 +7,81 @@ import { Button, Card, Input, notification, Space, Switch } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
-import { getAccountInfo, useAccountContext } from 'contexts/accountContext';
+import { useAccountContext } from 'contexts/accountContext';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // import { postData } from 'utils/http';
 
 export const Download = () => {
-  const [accountState, accountDispatch] = useAccountContext();
+  const [accountState] = useAccountContext();
 
-  const [tokenId, setTokenId] = useState();
+  // const [tokenId, setTokenId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [offerAmount, setOfferAmount] = useState<string>();
   const [onSale, setOnSale] = useState(true);
 
   let navigate = useNavigate();
 
-  const mintToken = async () => {
-    setIsLoading(true);
-    const wallet = xrpl.Wallet.fromSeed(accountState.account?.secret);
-    const client = new xrpl.Client('wss://xls20-sandbox.rippletest.net:51233');
-    await client.connect();
-
-    console.log('\n\n----------------Mint Token----------------');
-    const ipfsUrl =
-      'ipfs://QmNqAJtadcGSq2vTxcsJEYPU3BYUznxQCb1d59aC6tC115?filename=iris_Data_Analysis.pdf';
-
-    const transactionBlob = {
-      TransactionType: 'NFTokenMint',
-      Account: wallet.classicAddress,
-      URI: xrpl.convertStringToHex(ipfsUrl),
-      Flags: 1, // TODO put that into input
-      TokenTaxon: 0, //Required, but if you have no use for it, set to zero.
-    };
-    // Submit signed blob --------------------------------------------------------
-    const tx = await client.submitAndWait(transactionBlob, { wallet });
-
-    const nfts = await client.request({
-      method: 'account_nfts',
-      account: wallet.classicAddress,
-    });
-    console.log(JSON.stringify(nfts, null, 2));
-    // Check transaction results -------------------------------------------------
-    console.log('Transaction result:', tx.result.meta.TransactionResult);
-    console.log(
-      'Balance changes:',
-      JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2),
-    );
-
-    console.log('-----', nfts);
-    const accountNfts = nfts.result.account_nfts;
-    setTokenId(accountNfts[accountNfts.length - 1].TokenID);
-
-    notification.open({
-      message: 'Minted NFT succesfully',
-      placement: 'bottomRight',
-      icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-      onClick: () => {
-        console.log('Notification Clicked!');
-      },
-    });
-
-    // Get Account Info to update Balance after Minting Token
-    getAccountInfo(accountDispatch, accountState);
-    setIsLoading(false);
-    client.disconnect();
+  const download = () => {
+    const link = document.createElement('a');
+    link.href = `http://www.africau.edu/images/default/sample.pdf`;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
+
+  // const mintToken = async () => {
+  //   setIsLoading(true);
+  //   const wallet = xrpl.Wallet.fromSeed(accountState.account?.secret);
+  //   const client = new xrpl.Client('wss://xls20-sandbox.rippletest.net:51233');
+  //   await client.connect();
+
+  //   console.log('\n\n----------------Mint Token----------------');
+  //   const ipfsUrl =
+  //     'ipfs://QmNqAJtadcGSq2vTxcsJEYPU3BYUznxQCb1d59aC6tC115?filename=iris_Data_Analysis.pdf';
+
+  //   const transactionBlob = {
+  //     TransactionType: 'NFTokenMint',
+  //     Account: wallet.classicAddress,
+  //     URI: xrpl.convertStringToHex(ipfsUrl),
+  //     Flags: 1, // TODO put that into input
+  //     TokenTaxon: 0, //Required, but if you have no use for it, set to zero.
+  //   };
+  //   // Submit signed blob --------------------------------------------------------
+  //   const tx = await client.submitAndWait(transactionBlob, { wallet });
+
+  //   const nfts = await client.request({
+  //     method: 'account_nfts',
+  //     account: wallet.classicAddress,
+  //   });
+  //   console.log(JSON.stringify(nfts, null, 2));
+  //   // Check transaction results -------------------------------------------------
+  //   console.log('Transaction result:', tx.result.meta.TransactionResult);
+  //   console.log(
+  //     'Balance changes:',
+  //     JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2),
+  //   );
+
+  //   console.log('-----', nfts);
+  //   const accountNfts = nfts.result.account_nfts;
+  //   setTokenId(accountNfts[accountNfts.length - 1].TokenID);
+
+  //   notification.open({
+  //     message: 'Minted NFT succesfully',
+  //     placement: 'bottomRight',
+  //     icon: <SmileOutlined style={{ color: '#86dc3d' }} />,
+  //     onClick: () => {
+  //       console.log('Notification Clicked!');
+  //     },
+  //   });
+
+  //   // Get Account Info to update Balance after Minting Token
+  //   getAccountInfo(accountDispatch, accountState);
+  //   setIsLoading(false);
+  //   client.disconnect();
+  // };
 
   const createSellOffer = async () => {
     setIsLoading(true);
@@ -85,8 +94,8 @@ export const Download = () => {
     const transactionBlob = {
       TransactionType: 'NFTokenCreateOffer',
       Account: wallet.classicAddress,
-      TokenID: tokenId,
-      Amount: offerAmount, // TODO bind input
+      TokenID: accountState.lastMintedNft,
+      Amount: xrpl.xrpToDrops(offerAmount),
       Flags: 1,
     };
 
@@ -97,7 +106,7 @@ export const Download = () => {
     try {
       nftSellOffers = await client.request({
         method: 'nft_sell_offers',
-        tokenid: tokenId,
+        tokenid: accountState.lastMintedNft,
       });
     } catch (err) {
       console.log('No sell offers.');
@@ -108,7 +117,7 @@ export const Download = () => {
     try {
       nftBuyOffers = await client.request({
         method: 'nft_buy_offers',
-        tokenid: tokenId,
+        tokenid: accountState.lastMintedNft,
       });
     } catch (err) {
       console.log('No buy offers.');
@@ -129,7 +138,7 @@ export const Download = () => {
     notification.open({
       message: 'Your sell offer created successfully',
       placement: 'bottomRight',
-      icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+      icon: <SmileOutlined style={{ color: '#86dc3d' }} />,
     });
 
     client.disconnect();
@@ -152,28 +161,23 @@ export const Download = () => {
           />
         }
         actions={[
-          <Button
-            type="primary"
-            onClick={mintToken}
-            key="mint"
-            loading={isLoading}
-            disabled={tokenId}>
-            Mint NFT
+          <Button type="primary" onClick={download} key="mint" loading={isLoading}>
+            Download
           </Button>,
         ]}>
         <Space direction="vertical" style={{ width: 340 }}>
           <Meta
             title="IrisClassificationResults"
             description={
-              tokenId
+              accountState.lastMintedNft
                 ? ''
                 : `You can generate an NFT of that report by clicking Mint PDF Report`
             }
           />
-          {tokenId && (
+          {accountState.lastMintedNft && (
             <div>
               <Meta title="Token ID" className="fancy-description" />
-              <Text className="fancy-description">#{tokenId} </Text>
+              <Text className="fancy-description">#{accountState.lastMintedNft} </Text>
               <div className="flex flex-space-between marketplace-title">
                 <Title level={4}>Put on marketplace</Title>
                 <Switch defaultChecked onChange={onChangeSwitch} />
@@ -203,7 +207,7 @@ export const Download = () => {
                       onClick={createSellOffer}
                       key="mint"
                       loading={isLoading}
-                      disabled={!tokenId}>
+                      disabled={!accountState.lastMintedNft}>
                       Create Sell Offer
                     </Button>
                   </div>

@@ -145,7 +145,7 @@ export const MarketPlace = () => {
                       <div className="offer card" key={offer.index}>
                         <div className="price">
                           <span className="price">Current price</span>
-                          <span> {offer.amount} XRP</span>
+                          <span> {Number(offer.amount) / 1000000} XRP</span>
                         </div>
                         <Button
                           type="primary"
@@ -157,7 +157,7 @@ export const MarketPlace = () => {
                     ))
                   : 'No offers'}
               </Col>
-              <Col span={12} className="">
+              {/* <Col span={12} className="">
                 <Title level={3} style={{ textAlign: 'left' }}>
                   Make Offer
                 </Title>
@@ -188,7 +188,7 @@ export const MarketPlace = () => {
                     </Button>
                   </Form.Item>
                 </div>
-              </Col>
+              </Col> */}
             </Row>
           )}
         </Form>
