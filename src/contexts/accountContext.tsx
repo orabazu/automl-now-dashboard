@@ -42,6 +42,8 @@ async function connectWallet(
         'https://faucet-nft.ripple.com/accounts',
         'NFT-Devnet',
       );
+
+      console.log(accounts);
       wallet = accounts.account;
       notification.open({
         message:
@@ -74,7 +76,7 @@ async function connectWallet(
 
         const payload = {
           address: response.result.account_data.Account,
-          balance: response.result.account_data.Balance,
+          balance: Number(response.result.account_data.Balance) / 1000000,
           classicAddress: classicAddress,
           secret: seed || secret,
         };
@@ -113,7 +115,7 @@ async function getAccountInfo(
 
   const payload = {
     address: response.result.account_data.Account,
-    balance: response.result.account_data.Balance,
+    balance: Number(response.result.account_data.Balance) / 1000000,
     classicAddress: wallet.classicAddress,
     secret: wallet.seed,
   };
