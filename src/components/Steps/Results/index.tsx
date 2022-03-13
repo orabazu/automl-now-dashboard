@@ -7,6 +7,7 @@ import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
 import { getAccountInfo, useAccountContext } from 'contexts/accountContext';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AccountActionTypes } from 'reducers/accountReducer';
 
 export const Results = () => {
@@ -15,6 +16,8 @@ export const Results = () => {
   const [accountState, accountDispatch] = useAccountContext();
   const [transactionCost, setTransactionCost] = useState(0.000012);
   const [isTransactionComplete, setIsTransactionComplete] = useState(false);
+
+  let navigate = useNavigate();
 
   const results = {
     MSE: 0.86,
@@ -55,6 +58,7 @@ export const Results = () => {
 
     notification.open({
       message: 'Transaction submitted.',
+      description: `Identifying hash: ${signed.hash}`,
       placement: 'bottomRight',
       type: 'info',
     });
@@ -157,6 +161,10 @@ export const Results = () => {
     });
   }, []);
 
+  const onAbort = () => {
+    navigate('/');
+  };
+
   return (
     <>
       <div className="Regression">
@@ -171,10 +179,18 @@ export const Results = () => {
         </Descriptions>
 
         <div className="flex results-action">
-          <Button className="btn-fancy" onClick={openPurchaseForm} loading={isLoading}>
-            I want to purchase full report
+          <Button
+            className="btn-fancy"
+            onClick={openPurchaseForm}
+            loading={isLoading}
+            disabled={isTransactionComplete}>
+            I want to buy full report
           </Button>
-          <Button style={{ color: `red` }} loading={isLoading}>
+          <Button
+            onClick={onAbort}
+            style={{ color: `red` }}
+            loading={isLoading}
+            disabled={isTransactionComplete}>
             I need better results, delete my data
           </Button>
         </div>
@@ -199,7 +215,12 @@ export const Results = () => {
               <p>Transaction Cost: {transactionCost} XRP</p>
               <p>Minting Cost: {transactionCost} XRP</p>
               <p>Report&apos;s price: 10 XRP</p>
-              <p>Total: {transactionCost + 10} XRP</p>
+              <p>
+                Total:{' '}
+                <span style={{ fontWeight: 'bold', color: 'black' }}>
+                  {transactionCost * 2 + 10} XRP
+                </span>
+              </p>
               <p>
                 Your balance after transaction:{' '}
                 {accountState.account!.balance - (transactionCost + transactionCost + 10)}{' '}
@@ -214,7 +235,7 @@ export const Results = () => {
                 key="buy"
                 loading={isLoading}
                 disabled={isTransactionComplete}>
-                Buy Report
+                Buy the generated report
               </Button>
             </div>
           </Space>

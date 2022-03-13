@@ -11,11 +11,9 @@ const WelcomeStep = () => {
       <Timeline>
         <Timeline.Item>Connect your XRP wallet.</Timeline.Item>
         <Timeline.Item>Prepare and upload your data as xlsx.</Timeline.Item>
-        <Timeline.Item>Choose time available, settings, and run ML.</Timeline.Item>
+        <Timeline.Item>Choose data types of attributes and ML settings. </Timeline.Item>
         <Timeline.Item>See the predictive performance.</Timeline.Item>
-        <Timeline.Item>
-          Decide whether the purchase the full analysis report.
-        </Timeline.Item>
+        <Timeline.Item>Decide whether to buy the full analysis report.</Timeline.Item>
         <Timeline.Item>Pay in XRP and download your report.</Timeline.Item>
         <Timeline.Item>
           Your reports are stored secure. Only you can download your reports. Your data is
@@ -30,7 +28,7 @@ const WelcomeStep = () => {
             accountState.account?.address ? undefined : connectWallet(accountDispatch)
           }>
           {accountState.account?.address
-            ? `Your wallet is already connected`
+            ? `Your wallet is already connected, click Next`
             : `Cool, let's connect my wallet`}
         </Button>
       </Space>

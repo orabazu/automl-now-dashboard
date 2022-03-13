@@ -4,12 +4,14 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import './style.scss';
 
-import { Button, List, Result, Space } from 'antd';
+import { CopyOutlined } from '@ant-design/icons';
+import { Button, List, message, Result, Space } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
 import Logo from 'assets/logo.png';
 import { getAccountInfo, useAccountContext } from 'contexts/accountContext';
 import React, { useEffect, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 
 export type SellOfferType = {
@@ -153,12 +155,32 @@ const Dashboard = () => {
           //   },
           //   pageSize: 10,
           // }}
+          locale={{ emptyText: 'No NFTs' }}
           dataSource={accountNFTs}
           renderItem={(item) => (
             <List.Item className="card NFTCard">
               <Space direction="vertical" style={{ width: '100%' }}>
                 <List.Item.Meta
-                  title={`#${item.TokenID}`}
+                  title={
+                    <div className="flex flex-space-between">
+                      <span>#{item.TokenID}</span>
+                      <CopyToClipboard
+                        text={item.TokenID}
+                        onCopy={() =>
+                          message.info({
+                            content: item.TokenID,
+                          })
+                        }>
+                        <Button
+                          className="btn-fancy"
+                          type="primary"
+                          shape="circle"
+                          icon={<CopyOutlined />}
+                          size="small"
+                        />
+                      </CopyToClipboard>
+                    </div>
+                  }
                   description={xrpl.convertHexToString(item.URI)}
                 />
 
@@ -166,13 +188,13 @@ const Dashboard = () => {
 
                 <div className="actions">
                   <Button onClick={() => getOffers(item.TokenID)} className={'btn-fancy'}>
-                    Sync Sales
+                    Show sale status
                   </Button>
 
                   <div className="actions-right">
-                    <Button className={'btn-fancy'} style={{ marginRight: '5px' }}>
+                    {/* <Button className={'btn-fancy'} style={{ marginRight: '5px' }}>
                       Put on sale
-                    </Button>
+                    </Button> */}
                     <Button onClick={() => burnToken(item.TokenID)}>Burn</Button>
                   </div>
                 </div>

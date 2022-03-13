@@ -47,7 +47,7 @@ async function connectWallet(
       wallet = accounts.account;
       notification.open({
         message:
-          'You successfully generated a new wallet, save this seed value to recover later. ' +
+          'You successfully generated a new XRP wallet, save this private seed value to recover later. ' +
           wallet.secret,
         placement: 'bottomRight',
         icon: <SmileOutlined style={{ color: '#108ee9' }} />,

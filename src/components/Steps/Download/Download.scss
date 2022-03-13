@@ -12,6 +12,8 @@
     }
     .ant-card-cover img {
       border-radius: 24px 24px 0 0 !important;
+      height: 200px;
+      object-fit: contain;
     }
     .fancy-description {
       background: -webkit-linear-gradient(

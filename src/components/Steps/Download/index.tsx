@@ -11,6 +11,8 @@ import { useAccountContext } from 'contexts/accountContext';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import ReportImage from '../../../assets/report_generated.png';
+
 // import { postData } from 'utils/http';
 
 export const Download = () => {
@@ -25,63 +27,12 @@ export const Download = () => {
 
   const download = () => {
     const link = document.createElement('a');
-    link.href = `http://www.africau.edu/images/default/sample.pdf`;
+    link.href = `ipfs://QmNqAJtadcGSq2vTxcsJEYPU3BYUznxQCb1d59aC6tC115?filename=iris_Data_Analysis.pdf`;
     link.target = '_blank';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
-
-  // const mintToken = async () => {
-  //   setIsLoading(true);
-  //   const wallet = xrpl.Wallet.fromSeed(accountState.account?.secret);
-  //   const client = new xrpl.Client('wss://xls20-sandbox.rippletest.net:51233');
-  //   await client.connect();
-
-  //   console.log('\n\n----------------Mint Token----------------');
-  //   const ipfsUrl =
-  //     'ipfs://QmNqAJtadcGSq2vTxcsJEYPU3BYUznxQCb1d59aC6tC115?filename=iris_Data_Analysis.pdf';
-
-  //   const transactionBlob = {
-  //     TransactionType: 'NFTokenMint',
-  //     Account: wallet.classicAddress,
-  //     URI: xrpl.convertStringToHex(ipfsUrl),
-  //     Flags: 1, // TODO put that into input
-  //     TokenTaxon: 0, //Required, but if you have no use for it, set to zero.
-  //   };
-  //   // Submit signed blob --------------------------------------------------------
-  //   const tx = await client.submitAndWait(transactionBlob, { wallet });
-
-  //   const nfts = await client.request({
-  //     method: 'account_nfts',
-  //     account: wallet.classicAddress,
-  //   });
-  //   console.log(JSON.stringify(nfts, null, 2));
-  //   // Check transaction results -------------------------------------------------
-  //   console.log('Transaction result:', tx.result.meta.TransactionResult);
-  //   console.log(
-  //     'Balance changes:',
-  //     JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2),
-  //   );
-
-  //   console.log('-----', nfts);
-  //   const accountNfts = nfts.result.account_nfts;
-  //   setTokenId(accountNfts[accountNfts.length - 1].TokenID);
-
-  //   notification.open({
-  //     message: 'Minted NFT succesfully',
-  //     placement: 'bottomRight',
-  //     icon: <SmileOutlined style={{ color: '#86dc3d' }} />,
-  //     onClick: () => {
-  //       console.log('Notification Clicked!');
-  //     },
-  //   });
-
-  //   // Get Account Info to update Balance after Minting Token
-  //   getAccountInfo(accountDispatch, accountState);
-  //   setIsLoading(false);
-  //   client.disconnect();
-  // };
 
   const createSellOffer = async () => {
     setIsLoading(true);
@@ -157,17 +108,17 @@ export const Download = () => {
           <img
             style={{ borderRadius: '24px 24px 0 0' }}
             alt="example"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3cXtv77N7Lp7xFOiRum0a13pcg-u7UpGnlQ&usqp=CAU"
+            src={ReportImage}
           />
         }
         actions={[
-          <Button type="primary" onClick={download} key="mint" loading={isLoading}>
+          <Button type="primary" onClick={download} key="mint">
             Download
           </Button>,
         ]}>
         <Space direction="vertical" style={{ width: 340 }}>
           <Meta
-            title="IrisClassificationResults"
+            title="Analysis Result"
             description={
               accountState.lastMintedNft
                 ? ''
@@ -183,9 +134,9 @@ export const Download = () => {
                 <Switch onChange={onChangeSwitch} />
               </div>
               {onSale && (
-                <Space direction="vertical">
+                <Space direction="vertical" style={{ width: 340 }}>
                   <Text type="secondary" className="subtitle">
-                    Enter price to allow users instantly purchase your NFT
+                    Enter price to allow users instantly buy your NFT
                   </Text>
 
                   <div

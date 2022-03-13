@@ -133,16 +133,16 @@ export const MarketPlace = () => {
           <div className="flex card TokenForm">
             <Form.Item
               style={{ width: '500px', margin: 0 }}
-              label="TokenID"
+              label="NFT TokenID "
               name="TokenID"
-              rules={[{ required: true, message: 'Please input TokenID!' }]}>
+              rules={[{ required: true, message: 'Please input NFT TokenID!' }]}>
               <Input />
             </Form.Item>
             <Button
               onClick={() => getSellOffers()}
               icon={<DownloadOutlined />}
               loading={isLoading}>
-              Get sell offers
+              Show sale status
             </Button>
           </div>
 
@@ -157,7 +157,7 @@ export const MarketPlace = () => {
                       <div className="offer card" key={offer.index}>
                         <div className="flex flex-space-between">
                           <div className="price">
-                            <span className="price">Current price: </span>
+                            <span className="price">Price: </span>
                             <span> {Number(offer.amount) / 1000000} XRP</span>
                           </div>
 
@@ -172,7 +172,10 @@ export const MarketPlace = () => {
 
                         <p>Transaction Cost: {transactionCost} XRP</p>
                         <p>
-                          Total: {transactionCost + Number(offer.amount) / 1000000} XRP
+                          Total:{' '}
+                          <span style={{ color: 'black', fontWeight: 'bold' }}>
+                            {transactionCost + Number(offer.amount) / 1000000} XRP
+                          </span>
                         </p>
                       </div>
                     ))
